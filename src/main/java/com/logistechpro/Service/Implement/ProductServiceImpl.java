@@ -38,6 +38,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public ProductResponse getBySku(String sku){
+        Product product = productRepository.findBySku(sku).orElseThrow(()-> new RuntimeException("Product not found"));
+        return mapper.toResponse(product);
+    }
+
+    @Override
     public ProductResponse create(ProductRequest request) {
         Product product = mapper.toEntity(request);
         Product saved = productRepository.save(product);

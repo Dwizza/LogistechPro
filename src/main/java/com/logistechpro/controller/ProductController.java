@@ -4,6 +4,7 @@ import com.logistechpro.DTO.Request.ProductRequest;
 import com.logistechpro.DTO.Response.ProductResponse;
 import com.logistechpro.Service.ProductService;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,13 +12,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
+@AllArgsConstructor
 public class ProductController {
 
     private final ProductService productService;
-
-    public ProductController(ProductService productService) {
-        this.productService = productService;
-    }
 
     @GetMapping
     public ResponseEntity<List<ProductResponse>> getAll() {
@@ -27,6 +25,11 @@ public class ProductController {
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> getById(@PathVariable Long id) {
         return ResponseEntity.ok(productService.getById(id));
+    }
+
+    @GetMapping("/sku/{sku}")
+    public ResponseEntity<ProductResponse> getBySku(@PathVariable String sku){
+        return ResponseEntity.ok(productService.getBySku(sku));
     }
 
     @PostMapping
