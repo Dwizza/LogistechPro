@@ -2,53 +2,36 @@ package com.logistechpro.Models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Inventory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Product product;
 
-    @PositiveOrZero
-    private Integer qtyOnHand;
+    @ManyToOne(optional = false)
+    private Warehouse warehouse;
 
-    @PositiveOrZero
-    private Integer qtyReserved;
+    @Min(0)
+    private int qtyOnHand = 0;
 
-    public Long getId() {
-        return id;
-    }
+    @Min(0)
+    private int qtyReserved = 0;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
-    public Integer getQtyOnHand() {
-        return qtyOnHand;
-    }
-
-    public void setQtyOnHand(Integer qtyOnHand) {
-        this.qtyOnHand = qtyOnHand;
-    }
-
-    public Integer getQtyReserved() {
-        return qtyReserved;
-    }
-
-    public void setQtyReserved(Integer qtyReserved) {
-        this.qtyReserved = qtyReserved;
+    public int getAvailable() {
+        return qtyOnHand - qtyReserved;
     }
 }
 

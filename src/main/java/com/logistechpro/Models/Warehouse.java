@@ -14,9 +14,14 @@ public class Warehouse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(unique = true, nullable = false)
+    @NotBlank(message = "Warehouse code is required")
     private String code;
+
+    @NotBlank(message = "Warehouse name is required")
     private String name;
 
-    private boolean active;
+    private boolean active = true;
 }
 
