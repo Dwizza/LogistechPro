@@ -3,9 +3,20 @@ package com.logistechpro.Models;
 import com.logistechpro.Models.Enums.PurchaseOrderStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class PurchaseOrder {
 
     @Id
@@ -23,46 +34,7 @@ public class PurchaseOrder {
     @NotNull
     private LocalDateTime createdAt;
 
-    private LocalDateTime expectedDelivery;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Supplier getSupplier() {
-        return supplier;
-    }
-
-    public void setSupplier(Supplier supplier) {
-        this.supplier = supplier;
-    }
-
-    public PurchaseOrderStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(PurchaseOrderStatus status) {
-        this.status = status;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getExpectedDelivery() {
-        return expectedDelivery;
-    }
-
-    public void setExpectedDelivery(LocalDateTime expectedDelivery) {
-        this.expectedDelivery = expectedDelivery;
-    }
+    @OneToMany(mappedBy = "purchaseOrder", cascade = CascadeType.ALL)
+    private List<PurchaseOrderLine> lines = new ArrayList<>();
 }
 
