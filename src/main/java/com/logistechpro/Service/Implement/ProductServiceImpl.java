@@ -1,26 +1,29 @@
 package com.logistechpro.Service.Implement;
 
+import com.logistechpro.Models.Inventory;
 import com.logistechpro.Models.Product;
 import com.logistechpro.DTO.Request.ProductRequest;
 import com.logistechpro.DTO.Response.ProductResponse;
 import com.logistechpro.Mapper.ProductMapper;
+import com.logistechpro.Models.Warehouse;
+import com.logistechpro.Repository.InventoryRepository;
 import com.logistechpro.Repository.ProductRepository;
+import com.logistechpro.Repository.WarehouseRepository;
 import com.logistechpro.Service.ProductService;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+    private final InventoryRepository inventoryRepository;
+    private final WarehouseRepository warehouseRepository;
     private final ProductMapper mapper;
-
-    public ProductServiceImpl(ProductRepository productRepository, ProductMapper mapper) {
-        this.productRepository = productRepository;
-        this.mapper = mapper;
-    }
 
     @Override
     public List<ProductResponse> getAll() {
@@ -45,8 +48,22 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponse create(ProductRequest request) {
+        if (productRepository.findBySku(request.getSku()).isPresent()) {
+            throw new RuntimeException("SKU already exists");
+        }
         Product product = mapper.toEntity(request);
         Product saved = productRepository.save(product);
+
+        Warehouse warehouse = warehouseRepository.findById(request.getWarehouseId())
+                .orElseThrow(() -> new RuntimeException("Warehouse not found"));
+
+        Inventory inventory = Inventory.builder()
+                .product(saved)
+                .warehouse(warehouse)
+                .qtyOnHand(0)
+                .qtyReserved(0)
+                .build();
+        inventoryRepository.save(inventory);
         return mapper.toResponse(saved);
     }
 

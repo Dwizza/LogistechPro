@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
 @Entity
 @Data
 @SuperBuilder
@@ -37,6 +39,9 @@ public class User {
     @NotNull
     @Column(nullable = false)
     private Role role;
+
+    @OneToMany(mappedBy = "manager")
+    private List<Warehouse> warehouses;
 
     private boolean active = true;
 

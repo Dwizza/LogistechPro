@@ -22,6 +22,10 @@ public class Warehouse {
     @NotBlank(message = "Warehouse name is required")
     private String name;
 
+    @ManyToOne
+    @JoinColumn(name = "manager_id")
+    private User manager;
+
     private boolean active = true;
 }
 

@@ -6,21 +6,19 @@ import com.logistechpro.Mapper.WarehouseMapper;
 import com.logistechpro.Models.Warehouse;
 import com.logistechpro.Repository.WarehouseRepository;
 import com.logistechpro.Service.WarehouseService;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class WarehouseServiceImpl implements WarehouseService {
 
     private final WarehouseRepository repository;
     private final WarehouseMapper mapper;
 
-    public WarehouseServiceImpl(WarehouseRepository repository, WarehouseMapper mapper) {
-        this.repository = repository;
-        this.mapper = mapper;
-    }
 
     @Override
     public List<WarehouseResponse> getAll() {

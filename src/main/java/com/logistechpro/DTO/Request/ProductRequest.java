@@ -21,6 +21,9 @@ public class ProductRequest {
     @Positive(message = "Average price must be positive")
     private BigDecimal avgPrice;
 
+    @NotNull(message = "Warehouse ID is required")
+    private Long warehouseId;
+
     private boolean active = true;
 
 
