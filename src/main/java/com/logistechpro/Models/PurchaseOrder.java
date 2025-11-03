@@ -34,6 +34,10 @@ public class PurchaseOrder {
     @NotNull
     private LocalDateTime createdAt;
 
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "warehouse_id", nullable = false)
+    private Warehouse warehouse;
+
     @OneToMany(mappedBy = "purchaseOrder", cascade = CascadeType.ALL)
     private List<PurchaseOrderLine> lines = new ArrayList<>();
 }
