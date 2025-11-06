@@ -1,18 +1,28 @@
 package com.logistechpro.Models;
 
+import com.logistechpro.Models.Product;
+import com.logistechpro.Models.SalesOrder;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Positive;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.math.BigDecimal;
 
 @Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class SalesOrderLine {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @NotNull
+    @ManyToOne(optional = false)
     private Product product;
 
     @Positive
@@ -21,57 +31,11 @@ public class SalesOrderLine {
     @Positive
     private BigDecimal unitPrice;
 
-    private boolean backOrder;
+    private Integer qtyReserved = 0;
+    private Integer qtyShortage = 0;
+    private boolean backOrder = false;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "sales_order_id")
     private SalesOrder salesOrder;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public BigDecimal getUnitPrice() {
-        return unitPrice;
-    }
-
-    public void setUnitPrice(BigDecimal unitPrice) {
-        this.unitPrice = unitPrice;
-    }
-
-    public boolean isBackOrder() {
-        return backOrder;
-    }
-
-    public void setBackOrder(boolean backOrder) {
-        this.backOrder = backOrder;
-    }
-
-    public SalesOrder getSalesOrder() {
-        return salesOrder;
-    }
-
-    public void setSalesOrder(SalesOrder salesOrder) {
-        this.salesOrder = salesOrder;
-    }
 }
-

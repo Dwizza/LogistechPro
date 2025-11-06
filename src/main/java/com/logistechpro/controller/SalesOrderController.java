@@ -1,0 +1,33 @@
+package com.logistechpro.controller;
+
+import com.logistechpro.DTO.SalesOrderRequest;
+import com.logistechpro.DTO.Response.SalesOrderResponse;
+import com.logistechpro.Service.SalesOrderService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/sales-orders")
+@RequiredArgsConstructor
+public class SalesOrderController {
+
+    private final SalesOrderService salesOrderService;
+
+    @PostMapping
+    public ResponseEntity<SalesOrderResponse> create(@Valid @RequestBody SalesOrderRequest request) {
+        return ResponseEntity.ok(salesOrderService.create(request));
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<SalesOrderResponse> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(salesOrderService.findById(id));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<SalesOrderResponse>> findAll() {
+        return ResponseEntity.ok(salesOrderService.findAll());
+    }
+}

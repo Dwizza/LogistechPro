@@ -1,5 +1,5 @@
 package com.logistechpro.Models.Enums;
 
 public enum OrderStatus {
-    CREATED, RESERVED, SHIPPED, DELIVERED, CANCELED
+    CREATED, RESERVED, PARTIALLY_RESERVED, SHIPPED, DELIVERED, CANCELED
 }
