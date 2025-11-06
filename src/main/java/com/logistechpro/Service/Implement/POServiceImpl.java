@@ -59,40 +59,55 @@ public class POServiceImpl implements POService{
         return mapper.toResponse(saved);
     }
 
-    @Transactional
-    public POResponse validatePurchaseOrder(Long poId) {
-        // 1️⃣ نجيب الـ PO
+    public POResponse approvePurchaseOrder(Long poId){
         PurchaseOrder po = poRepo.findById(poId)
                 .orElseThrow(() -> new RuntimeException("Purchase Order not found"));
-
         if (po.getStatus() != PurchaseOrderStatus.CREATED) {
             throw new RuntimeException("Only CREATED orders can be validated");
         }
 
-        // 2️⃣ نغيّر الحالة
         po.setStatus(PurchaseOrderStatus.APPROVED);
+
+        PurchaseOrder saved = poRepo.save(po);
+        return mapper.toResponse(saved);
+    }
+
+    @Transactional
+    public POResponse receivePurchaseOrder(Long poId) {
+        PurchaseOrder po = poRepo.findById(poId)
+                .orElseThrow(() -> new RuntimeException("Purchase Order not found"));
+
+        if (po.getStatus() != PurchaseOrderStatus.APPROVED) {
+            throw new RuntimeException("Only APPROVED orders can be validated");
+        }
+
+        po.setStatus(PurchaseOrderStatus.RECEIVED);
 
         Warehouse warehouse = po.getWarehouse();
 
-        // 3️⃣ نمرّ على كل Line فـ PO
         for (PurchaseOrderLine line : po.getLines()) {
             Product product = line.getProduct();
 
-            // 🔹 نجيب Inventory ديال المنتج فهاد المخزن
-            Inventory inventory = inventoryRepo.findByProductAndWarehouse(product, warehouse)
-                    .orElseGet(() -> Inventory.builder()
-                            .product(product)
-                            .warehouse(warehouse)
-                            .qtyOnHand(0)
-                            .qtyReserved(0)
-                            .build()
-                    );
+            Inventory inventory = Inventory.builder()
+                    .product(product)
+                    .warehouse(warehouse)
+                    .qtyOnHand(0)
+                    .qtyReserved(0)
+                    .build();
+            inventoryRepo.save(inventory);
 
-            // 🔹 نحدّث الكمية
+//            Inventory inventory = inventoryRepo.findByProductAndWarehouse(product, warehouse)
+//                    .orElseGet(() -> Inventory.builder()
+//                            .product(product)
+//                            .warehouse(warehouse)
+//                            .qtyOnHand(0)
+//                            .qtyReserved(0)
+//                            .build()
+//                    );
+
             inventory.setQtyOnHand(inventory.getQtyOnHand() + line.getQuantity());
             inventoryRepo.save(inventory);
 
-            // 4️⃣ نسجّل حركة جديدة (InventoryMovement)
             InventoryMovement movement = InventoryMovement.builder()
                     .product(product)
                     .warehouse(warehouse)
@@ -106,7 +121,19 @@ public class POServiceImpl implements POService{
             movmentRepo.save(movement);
         }
 
-        // 5️⃣ نحفظ التغييرات فالـ PO
+        PurchaseOrder saved = poRepo.save(po);
+        return mapper.toResponse(saved);
+    }
+
+    public POResponse cancelPurchaseOrder(Long id){
+        PurchaseOrder po = poRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Purchase Order not found"));
+        if (po.getStatus() != PurchaseOrderStatus.CREATED) {
+            throw new RuntimeException("Only CREATED orders can be canceled");
+        }
+
+        po.setStatus(PurchaseOrderStatus.CANCELED);
+
         PurchaseOrder saved = poRepo.save(po);
         return mapper.toResponse(saved);
     }

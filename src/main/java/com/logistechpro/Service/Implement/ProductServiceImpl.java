@@ -54,16 +54,6 @@ public class ProductServiceImpl implements ProductService {
         Product product = mapper.toEntity(request);
         Product saved = productRepository.save(product);
 
-        Warehouse warehouse = warehouseRepository.findById(request.getWarehouseId())
-                .orElseThrow(() -> new RuntimeException("Warehouse not found"));
-
-        Inventory inventory = Inventory.builder()
-                .product(saved)
-                .warehouse(warehouse)
-                .qtyOnHand(0)
-                .qtyReserved(0)
-                .build();
-        inventoryRepository.save(inventory);
         return mapper.toResponse(saved);
     }
 

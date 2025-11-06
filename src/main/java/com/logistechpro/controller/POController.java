@@ -20,9 +20,18 @@ public class POController {
         return ResponseEntity.ok(poService.create(request));
     }
 
-    @PutMapping("/validate/{id}")
-    public ResponseEntity<POResponse> validate(@PathVariable Long id) {
-        return ResponseEntity.ok(poService.validatePurchaseOrder(id));
+    @PutMapping("/approve/{id}")
+    public ResponseEntity<POResponse> approve(@PathVariable Long id) {
+        return ResponseEntity.ok(poService.approvePurchaseOrder(id));
     }
 
+    @PutMapping("/receive/{id}")
+    public ResponseEntity<POResponse> receive(@PathVariable Long id){
+        return ResponseEntity.ok(poService.receivePurchaseOrder(id));
+    }
+
+    @PutMapping("/cancel/{id}")
+    public ResponseEntity<POResponse> cancel(@PathVariable Long id){
+        return ResponseEntity.ok(poService.cancelPurchaseOrder(id));
+    }
 }

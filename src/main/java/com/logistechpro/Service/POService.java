@@ -5,5 +5,7 @@ import com.logistechpro.DTO.Response.POResponse;
 
 public interface POService {
         POResponse create(PORequest request);
-        POResponse validatePurchaseOrder(Long poId);
+        POResponse approvePurchaseOrder(Long poId);
+        POResponse receivePurchaseOrder(Long poId);
+        POResponse cancelPurchaseOrder(Long poId);
 }
