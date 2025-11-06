@@ -53,6 +53,7 @@ public class ReservationServiceImpl implements ReservationService {
                 inv.setQtyReserved(inv.getQtyReserved() + requestedQty);
                 inventoryRepo.save(inv);
 
+
                 line.setQtyReserved(requestedQty);
                 line.setQtyShortage(0);
                 line.setBackOrder(false);
