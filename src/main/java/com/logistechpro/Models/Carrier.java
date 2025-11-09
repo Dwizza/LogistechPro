@@ -3,11 +3,18 @@ package com.logistechpro.Models;
 import com.logistechpro.Models.Enums.CarrierStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
-
+@Builder
 @Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Carrier {
 
     @Id
@@ -31,61 +38,5 @@ public class Carrier {
 
     @Enumerated(EnumType.STRING)
     private CarrierStatus status;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getContactEmail() {
-        return contactEmail;
-    }
-
-    public void setContactEmail(String contactEmail) {
-        this.contactEmail = contactEmail;
-    }
-
-    public BigDecimal getCapacityWeight() {
-        return capacityWeight;
-    }
-
-    public void setCapacityWeight(BigDecimal capacityWeight) {
-        this.capacityWeight = capacityWeight;
-    }
-
-    public BigDecimal getCapacityVolume() {
-        return capacityVolume;
-    }
-
-    public void setCapacityVolume(BigDecimal capacityVolume) {
-        this.capacityVolume = capacityVolume;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public CarrierStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(CarrierStatus status) {
-        this.status = status;
-    }
 }
 
