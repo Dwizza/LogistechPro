@@ -3,9 +3,18 @@ package com.logistechpro.Models;
 import com.logistechpro.Models.Enums.ShipmentStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 
 @Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Shipment {
 
     @Id
@@ -25,60 +34,8 @@ public class Shipment {
     @ManyToOne
     private Carrier carrier;
 
-    public Long getId() {
-        return id;
-    }
+    @ManyToOne(optional = false)
+    private SalesOrder salesOrder;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTrackingNumber() {
-        return trackingNumber;
-    }
-
-    public void setTrackingNumber(String trackingNumber) {
-        this.trackingNumber = trackingNumber;
-    }
-
-    public ShipmentStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(ShipmentStatus status) {
-        this.status = status;
-    }
-
-    public LocalDateTime getPlannedDate() {
-        return plannedDate;
-    }
-
-    public void setPlannedDate(LocalDateTime plannedDate) {
-        this.plannedDate = plannedDate;
-    }
-
-    public LocalDateTime getShippedDate() {
-        return shippedDate;
-    }
-
-    public void setShippedDate(LocalDateTime shippedDate) {
-        this.shippedDate = shippedDate;
-    }
-
-    public LocalDateTime getDeliveredDate() {
-        return deliveredDate;
-    }
-
-    public void setDeliveredDate(LocalDateTime deliveredDate) {
-        this.deliveredDate = deliveredDate;
-    }
-
-    public Carrier getCarrier() {
-        return carrier;
-    }
-
-    public void setCarrier(Carrier carrier) {
-        this.carrier = carrier;
-    }
 }
 
