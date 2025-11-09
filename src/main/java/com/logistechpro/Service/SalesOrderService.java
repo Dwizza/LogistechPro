@@ -9,4 +9,5 @@ public interface SalesOrderService {
     SalesOrderResponse create(SalesOrderRequest request);
     SalesOrderResponse findById(Long id);
     List<SalesOrderResponse> findAll();
+    List<SalesOrderResponse> findByStatus(String status);
 }

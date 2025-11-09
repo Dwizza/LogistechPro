@@ -88,23 +88,16 @@ public class POServiceImpl implements POService{
         for (PurchaseOrderLine line : po.getLines()) {
             Product product = line.getProduct();
 
-            Inventory inventory = Inventory.builder()
-                    .product(product)
-                    .warehouse(warehouse)
-                    .qtyOnHand(0)
-                    .qtyReserved(0)
-                    .build();
-            inventoryRepo.save(inventory);
+            Inventory inventory = inventoryRepo.findByProductAndWarehouse(product, warehouse).orElse(null);
 
-//            Inventory inventory = inventoryRepo.findByProductAndWarehouse(product, warehouse)
-//                    .orElseGet(() -> Inventory.builder()
-//                            .product(product)
-//                            .warehouse(warehouse)
-//                            .qtyOnHand(0)
-//                            .qtyReserved(0)
-//                            .build()
-//                    );
-
+            if (inventory == null) {
+                inventory = Inventory.builder()
+                        .product(product)
+                        .warehouse(warehouse)
+                        .qtyOnHand(0)
+                        .qtyReserved(0)
+                        .build();
+            }
             inventory.setQtyOnHand(inventory.getQtyOnHand() + line.getQuantity());
             inventoryRepo.save(inventory);
 

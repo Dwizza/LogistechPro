@@ -30,4 +30,9 @@ public class SalesOrderController {
     public ResponseEntity<List<SalesOrderResponse>> findAll() {
         return ResponseEntity.ok(salesOrderService.findAll());
     }
+
+    @GetMapping("/status/{status}")
+    public ResponseEntity<List<SalesOrderResponse>> findByStatus(@PathVariable String status) {
+        return ResponseEntity.ok(salesOrderService.findByStatus(status));
+    }
 }

@@ -68,4 +68,18 @@ public class SalesOrderServiceImpl implements SalesOrderService {
                 .map(mapper::toResponse)
                 .toList();
     }
+
+    @Override
+    public List<SalesOrderResponse> findByStatus(String status) {
+        OrderStatus orderStatus;
+        try {
+            orderStatus = OrderStatus.valueOf(status.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Invalid order status: " + status);
+        }
+
+        return salesOrderRepository.findByStatus(String.valueOf(orderStatus)).stream()
+                .map(mapper::toResponse)
+                .toList();
+    }
 }
