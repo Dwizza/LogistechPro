@@ -41,33 +41,19 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('SonarQube') {
-                    sh """
-                        ./mvnw sonar:sonar \
-                        -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
-                        -Dsonar.projectName=${SONAR_PROJECT_NAME} \
-                        -Dsonar.projectVersion=${SONAR_PROJECT_VERSION} \
-                        -Dsonar.host.url=http://sonarqube:9000 \
-                        -Dsonar.login=${SONAR_AUTH_TOKEN}
-                    """
-                }
-            }
+        stage('SonarQube Analysis & Quality Gate') {
+                    steps {
+                        // 'SonarQube' est le nom du serveur que vous avez configuré
+                        withSonarQubeEnv('SonarQube') {
+                            // 'verify' a déjà créé le rapport jacoco.exec
+                            // 'sonar:sonar' va l'envoyer à SonarQube
+                            sh "mvn sonar:sonar -Dsonar.qualitygate.wait=true -Dsonar.qualitygate.timeout=300"
+                        }
+
+                        echo "SonarQube analysis completed successfully"
+                    }
         }
 
-        stage('Quality Gate') {
-            steps {
-                timeout(time: 3, unit: 'MINUTES') {
-                    script {
-                        def qg = waitForQualityGate()
-                        if (qg.status != 'OK') {
-                            error "Quality Gate Failed: ${qg.status}"
-                        }
-                    }
-                }
-            }
-        }
 
         stage('Archive Reports') {
             steps {
