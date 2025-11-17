@@ -65,7 +65,6 @@ public class POServiceImpl implements POService{
         if (po.getStatus() != PurchaseOrderStatus.CREATED) {
             throw new RuntimeException("Only CREATED orders can be validated");
         }
-
         po.setStatus(PurchaseOrderStatus.APPROVED);
 
         PurchaseOrder saved = poRepo.save(po);
