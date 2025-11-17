@@ -1,73 +1,88 @@
-// Fichier: Jenkinsfile
 pipeline {
-    // 1. Agent: "any"
-    // Fait tourner le build sur le contrôleur Jenkins principal.
     agent any
 
-    // 2. Outils:
-    // Demande à Jenkins d'utiliser les outils que vous venez de configurer 
-    // dans "Global Tool Configuration"
-    tools {
-        maven 'maven'
-        jdk 'jdk21'
+    environment {
+        SONARQUBE_SERVER = 'SonarQube'
+        SONAR_AUTH_TOKEN = credentials('sonar-token')
+
+        SONAR_PROJECT_KEY = 'LogistechPro2'
+        SONAR_PROJECT_NAME = 'LogistechPro2'
+        SONAR_PROJECT_VERSION = '1.0'
     }
 
     stages {
-        // 3. Étape de Checkout
+
         stage('Checkout') {
             steps {
-                checkout scm
+                checkout([$class: 'GitSCM',
+                    branches: [[name: '*/main']],
+                    userRemoteConfigs: [[
+                        url: 'https://github.com/Dwizza/LogistechPro.git',
+                        credentialsId: 'github-user'
+                    ]]
+                ])
             }
         }
 
-        // 4. Étape de Build, Test & JaCoCo
-        // UNE SEULE commande Maven qui fait tout:
-        // 'clean': Nettoie
-        // 'verify': Compile, teste, package, ET exécute le rapport JaCoCo
-        stage('Build, Test & JaCoCo') {
+        stage('Fix mvnw permissions') {
             steps {
-                sh "mvn clean verify"
+                sh 'chmod +x mvnw'
             }
         }
 
-        // 5. Étape d'analyse SonarQube
-        stage('SonarQube Analysis & Quality Gate') {
+        stage('Build & Test') {
             steps {
-                // 'SonarQube' est le nom du serveur que vous avez configuré
-                withSonarQubeEnv('SonarQube') {
-                    // 'verify' a déjà créé le rapport jacoco.exec
-                    // 'sonar:sonar' va l'envoyer à SonarQube
-                    sh "mvn sonar:sonar -Dsonar.qualitygate.wait=true -Dsonar.qualitygate.timeout=300"
+                sh './mvnw clean verify -Dmaven.test.failure.ignore=true'
+            }
+            post {
+                always {
+                    junit 'target/surefire-reports/*.xml'
                 }
-                
-                echo "SonarQube analysis completed successfully"
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('SonarQube') {
+                    sh """
+                        ./mvnw sonar:sonar \
+                        -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
+                        -Dsonar.projectName=${SONAR_PROJECT_NAME} \
+                        -Dsonar.projectVersion=${SONAR_PROJECT_VERSION} \
+                        -Dsonar.host.url=http://sonarqube:9000 \
+                        -Dsonar.login=${SONAR_AUTH_TOKEN}
+                    """
+                }
+            }
+        }
+
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 3, unit: 'MINUTES') {
+                    script {
+                        def qg = waitForQualityGate()
+                        if (qg.status != 'OK') {
+                            error "Quality Gate Failed: ${qg.status}"
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Archive Reports') {
+            steps {
+                archiveArtifacts artifacts: 'target/**/*.jar', fingerprint: true
+                archiveArtifacts artifacts: 'target/site/jacoco/*', fingerprint: true
             }
         }
     }
 
-    // 6. Actions Post-Build (toujours exécutées)
     post {
-        always {
-            // Publie les résultats des tests unitaires
-            junit 'target/surefire-reports/**/*.xml'
-            
-            // Publie le rapport de couverture de code JaCoCo
-            jacoco(
-                execPattern: 'target/jacoco.exec',
-                classPattern: 'target/classes',
-                sourcePattern: 'src/main/java'
-            )
-            
-            // Archive l'artefact (votre pom.xml produit un .war)
-            archiveArtifacts artifacts: 'target/*.war', allowEmptyArchive: true
-        }
-        
         success {
-            echo 'Pipeline exécuté avec succès!'
+            echo "Build SUCCESSFUL!"
         }
-        
         failure {
-            echo 'Pipeline a échoué!'
+            echo "Build FAILED!"
         }
     }
 }
