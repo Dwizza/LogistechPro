@@ -5,8 +5,8 @@ pipeline {
         SONARQUBE_SERVER = 'SonarQube'
         SONAR_AUTH_TOKEN = credentials('sonar-token')
 
-        SONAR_PROJECT_KEY = 'LogistechPro'
-        SONAR_PROJECT_NAME = 'LogistechPro'
+        SONAR_PROJECT_KEY = 'LogistechPro2'
+        SONAR_PROJECT_NAME = 'LogistechPro2'
         SONAR_PROJECT_VERSION = '1.0'
     }
 
