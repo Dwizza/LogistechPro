@@ -62,7 +62,7 @@ pipeline {
                     script {
                         def qg = waitForQualityGate()
                         if (qg.status != 'OK') {
-                            error "❌ Quality Gate Failed: ${qg.status}"
+                            error "Quality Gate Failed: ${qg.status}"
                         }
                     }
                 }
@@ -79,10 +79,10 @@ pipeline {
 
     post {
         success {
-            echo "🔥 Build SUCCESSFUL!"
+            echo "Build SUCCESSFUL!"
         }
         failure {
-            echo "❌ Build FAILED!"
+            echo "Build FAILED!"
         }
     }
 }
