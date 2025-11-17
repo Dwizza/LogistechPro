@@ -1,14 +1,10 @@
 pipeline {
     agent any
 
-    environment {
-        SONARQUBE_SERVER = 'SonarQube'
-        SONAR_AUTH_TOKEN = credentials('sonar-token')
-
-        SONAR_PROJECT_KEY = 'LogistechPro2'
-        SONAR_PROJECT_NAME = 'LogistechPro2'
-        SONAR_PROJECT_VERSION = '1.0'
-    }
+    tools {
+            maven 'maven-3.8.5'
+            jdk 'jdk-17'
+        }
 
     stages {
 
