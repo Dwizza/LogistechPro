@@ -1,70 +1,73 @@
+// Fichier: Jenkinsfile
 pipeline {
+    // 1. Agent: "any"
+    // Fait tourner le build sur le contrôleur Jenkins principal.
     agent any
 
+    // 2. Outils:
+    // Demande à Jenkins d'utiliser les outils que vous venez de configurer 
+    // dans "Global Tool Configuration"
     tools {
-            maven 'maven'
-            jdk 'jdk21'
-        }
+        maven 'maven'
+        jdk 'jdk21'
+    }
 
     stages {
-
+        // 3. Étape de Checkout
         stage('Checkout') {
             steps {
-                checkout([$class: 'GitSCM',
-                    branches: [[name: '*/main']],
-                    userRemoteConfigs: [[
-                        url: 'https://github.com/Dwizza/LogistechPro.git',
-                        credentialsId: 'github-user'
-                    ]]
-                ])
+                checkout scm
             }
         }
 
-        stage('Fix mvnw permissions') {
+        // 4. Étape de Build, Test & JaCoCo
+        // UNE SEULE commande Maven qui fait tout:
+        // 'clean': Nettoie
+        // 'verify': Compile, teste, package, ET exécute le rapport JaCoCo
+        stage('Build, Test & JaCoCo') {
             steps {
-                sh 'chmod +x mvnw'
+                sh "mvn clean verify"
             }
         }
 
-        stage('Build & Test') {
-            steps {
-                sh './mvnw clean verify -Dmaven.test.failure.ignore=true'
-            }
-            post {
-                always {
-                    junit 'target/surefire-reports/*.xml'
-                }
-            }
-        }
-
+        // 5. Étape d'analyse SonarQube
         stage('SonarQube Analysis & Quality Gate') {
-                    steps {
-                        // 'SonarQube' est le nom du serveur que vous avez configuré
-                        withSonarQubeEnv('SonarQube') {
-                            // 'verify' a déjà créé le rapport jacoco.exec
-                            // 'sonar:sonar' va l'envoyer à SonarQube
-                            sh "mvn sonar:sonar -Dsonar.qualitygate.wait=true -Dsonar.qualitygate.timeout=300"
-                        }
-
-                        echo "SonarQube analysis completed successfully"
-                    }
-        }
-
-
-        stage('Archive Reports') {
             steps {
-                archiveArtifacts artifacts: 'target/**/*.jar', fingerprint: true
-                archiveArtifacts artifacts: 'target/site/jacoco/*', fingerprint: true
+                // 'SonarQube' est le nom du serveur que vous avez configuré
+                withSonarQubeEnv('SonarQube') {
+                    // 'verify' a déjà créé le rapport jacoco.exec
+                    // 'sonar:sonar' va l'envoyer à SonarQube
+                    sh "mvn sonar:sonar -Dsonar.qualitygate.wait=true -Dsonar.qualitygate.timeout=300"
+                }
+                
+                echo "SonarQube analysis completed successfully"
             }
         }
     }
 
+    // 6. Actions Post-Build (toujours exécutées)
     post {
-        success {
-            echo "Build SUCCESSFUL!"
+        always {
+            // Publie les résultats des tests unitaires
+            junit 'target/surefire-reports/**/*.xml'
+            
+            // Publie le rapport de couverture de code JaCoCo
+            jacoco(
+                execPattern: 'target/jacoco.exec',
+                classPattern: 'target/classes',
+                sourcePattern: 'src/main/java'
+            )
+            
+            // Archive l'artefact (votre pom.xml produit un .war)
+            archiveArtifacts artifacts: 'target/*.war', allowEmptyArchive: true
         }
+        
+        success {
+            echo 'Pipeline exécuté avec succès!'
+        }
+        
         failure {
-            echo "Build FAILED!"
+            echo 'Pipeline a échoué!'
         }
     }
 }
