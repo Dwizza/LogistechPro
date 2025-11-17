@@ -1,12 +1,10 @@
-package com.logistechpro.controller;
+package com.logistechpro.Controller;
 
 import com.logistechpro.DTO.Request.CarrierRequest;
 import com.logistechpro.DTO.Response.CarrierResponse;
 import com.logistechpro.Service.CarrierService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Generated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

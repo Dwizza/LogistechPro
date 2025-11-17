@@ -3,11 +3,13 @@ package com.logistechpro.DTO;
 import com.logistechpro.DTO.Request.SalesOrderLineRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
+@Builder
 public class SalesOrderRequest {
 
     @NotNull

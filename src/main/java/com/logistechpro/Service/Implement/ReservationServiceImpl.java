@@ -133,7 +133,6 @@ public class ReservationServiceImpl implements ReservationService {
 
                 }
             }
-
         }
 
         order.setStatus(allReserved ? OrderStatus.RESERVED : OrderStatus.PARTIALLY_RESERVED);

@@ -1,11 +1,10 @@
-package com.logistechpro.controller;
+package com.logistechpro.Controller;
 
 import com.logistechpro.DTO.Request.ClientLoginRequest;
 import com.logistechpro.DTO.Request.ClientRegisterRequest;
 import com.logistechpro.DTO.Response.ClientResponse;
 import com.logistechpro.Service.ClientAuthService;
 import jakarta.validation.Valid;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package com.logistechpro.controller;
+package com.logistechpro.Controller;
 
 import com.logistechpro.DTO.Request.PORequest;
 import com.logistechpro.DTO.Response.POResponse;

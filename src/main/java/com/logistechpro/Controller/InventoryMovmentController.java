@@ -1,4 +1,4 @@
-package com.logistechpro.controller;
+package com.logistechpro.Controller;
 
 import com.logistechpro.DTO.Request.InventoryMovmentRequest;
 import com.logistechpro.DTO.Response.InventoryMovmentResponse;
