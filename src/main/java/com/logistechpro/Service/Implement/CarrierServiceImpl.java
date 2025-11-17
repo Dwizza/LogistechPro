@@ -23,6 +23,7 @@ public class CarrierServiceImpl implements CarrierService {
         if (carrierRepo.findByContactEmail(request.getContactEmail()).isPresent()) {
             throw new RuntimeException("Email already exists!");
         }
+
         Carrier carrier = carrierMapper.toEntity(request);
         Carrier savedCarrier = carrierRepo.save(carrier);
 
