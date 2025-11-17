@@ -2,13 +2,9 @@ pipeline {
     agent any
 
     environment {
-        // SonarQube server name from Jenkins → Manage Jenkins > System
         SONARQUBE_SERVER = 'SonarQube'
-
-        // Sonar token ID from Jenkins credentials
         SONAR_AUTH_TOKEN = credentials('sonar-token')
 
-        // Project info
         SONAR_PROJECT_KEY = 'LogistechPro'
         SONAR_PROJECT_NAME = 'LogistechPro'
         SONAR_PROJECT_VERSION = '1.0'
@@ -22,9 +18,15 @@ pipeline {
                     branches: [[name: '*/main']],
                     userRemoteConfigs: [[
                         url: 'https://github.com/Dwizza/LogistechPro.git',
-                        credentialsId: 'dwiza-github'
+                        credentialsId: 'github-user'
                     ]]
                 ])
+            }
+        }
+
+        stage('Fix mvnw permissions') {
+            steps {
+                sh 'chmod +x mvnw'
             }
         }
 
@@ -66,11 +68,6 @@ pipeline {
                 }
             }
         }
-        stage('Fix mvnw permissions') {
-            steps {
-                sh 'chmod +x mvnw'
-            }
-        }
 
         stage('Archive Reports') {
             steps {
@@ -78,7 +75,6 @@ pipeline {
                 archiveArtifacts artifacts: 'target/site/jacoco/*', fingerprint: true
             }
         }
-
     }
 
     post {
