@@ -66,6 +66,11 @@ pipeline {
                 }
             }
         }
+        stage('Fix mvnw permissions') {
+            steps {
+                sh 'chmod +x mvnw'
+            }
+        }
 
         stage('Archive Reports') {
             steps {
@@ -73,6 +78,7 @@ pipeline {
                 archiveArtifacts artifacts: 'target/site/jacoco/*', fingerprint: true
             }
         }
+
     }
 
     post {
