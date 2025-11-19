@@ -79,7 +79,6 @@ public class POServiceImpl implements POService{
         if (po.getStatus() != PurchaseOrderStatus.APPROVED) {
             throw new RuntimeException("Only APPROVED orders can be validated");
         }
-
         po.setStatus(PurchaseOrderStatus.RECEIVED);
 
         Warehouse warehouse = po.getWarehouse();
