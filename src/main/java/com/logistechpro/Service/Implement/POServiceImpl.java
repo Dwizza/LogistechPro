@@ -35,6 +35,8 @@ public class POServiceImpl implements POService{
         Warehouse warehouse = warehouseRepo.findById(request.getWarehouseId())
                 .orElseThrow(() -> new RuntimeException("Warehouse not found"));
 
+        if(request.getLines().isEmpty()) throw new RuntimeException("At least one line is required");
+
         PurchaseOrder po = PurchaseOrder.builder()
                 .supplier(supplier)
                 .warehouse(warehouse)

@@ -10,6 +10,7 @@ import com.logistechpro.Repository.ClientRepository;
 import com.logistechpro.Repository.UserRepository;
 import com.logistechpro.Service.ClientAuthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -21,7 +22,7 @@ public class ClientAuthServiceImpl implements ClientAuthService {
     private final UserRepository userRepository;
     private final ClientRepository clientRepository;
     private final ClientMapper clientMapper;
-//    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public ClientResponse register(ClientRegisterRequest request) {
@@ -30,7 +31,8 @@ public class ClientAuthServiceImpl implements ClientAuthService {
             throw new RuntimeException("Email already exists!");
         }
         Client client = clientMapper.toEntity(request);
-//        client.getUser().setPasswordHash(passwordEncoder.encode(request.getPassword()));
+        // Encoder le mot de passe avant sauvegarde
+        client.getUser().setPasswordHash(passwordEncoder.encode(request.getPassword()));
         User savedUser = userRepository.save(client.getUser());
         client.setUser(savedUser);
         Client savedClient = clientRepository.save(client);
@@ -40,11 +42,10 @@ public class ClientAuthServiceImpl implements ClientAuthService {
     @Override
     public ClientResponse login(ClientLoginRequest request) {
 
-
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("Email not found"));
 
-        if (!user.getPasswordHash().equals(request.getPassword())) {
+        if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
             throw new RuntimeException("Invalid password");
         }
 
@@ -55,4 +56,3 @@ public class ClientAuthServiceImpl implements ClientAuthService {
     }
 
 }
-

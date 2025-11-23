@@ -83,8 +83,12 @@ class ProductServiceTest {
         Product p2 = Product.builder().id(2L).sku("SKU2").name("B").category("C2").avgPrice(new BigDecimal("20.00")).active(false).build();
         when(productRepository.findAll()).thenReturn(List.of(p1, p2));
 
-        ProductResponse r1 = new ProductResponse(); r1.setId(1L); r1.setSku("SKU1"); r1.setName("A"); r1.setCategory("C1"); r1.setAvgPrice(new BigDecimal("10.50")); r1.setActive(true);
-        ProductResponse r2 = new ProductResponse(); r2.setId(2L); r2.setSku("SKU2"); r2.setName("B"); r2.setCategory("C2"); r2.setAvgPrice(new BigDecimal("20.00")); r2.setActive(false);
+        ProductResponse r1 = new ProductResponse();
+        r1.setId(1L); r1.setSku("SKU1"); r1.setName("A"); r1.setCategory("C1"); r1.setAvgPrice(new BigDecimal("10.50")); r1.setActive(true);
+
+        ProductResponse r2 = new ProductResponse();
+        r2.setId(2L); r2.setSku("SKU2"); r2.setName("B"); r2.setCategory("C2"); r2.setAvgPrice(new BigDecimal("20.00")); r2.setActive(false);
+
         when(mapper.toResponse(p1)).thenReturn(r1);
         when(mapper.toResponse(p2)).thenReturn(r2);
 

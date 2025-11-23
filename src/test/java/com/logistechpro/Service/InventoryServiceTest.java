@@ -104,10 +104,8 @@ class InventoryServiceTest {
         when(inventoryRepo.findAll()).thenReturn(inventoryList);
         when(mapper.toResponse(mockInventory)).thenReturn(mockResponse);
 
-        // Act
         List<InventoryResponse> result = inventoryService.getAll();
 
-        // Assert
         assertNotNull(result);
         assertEquals(1, result.size());
         verify(inventoryRepo, times(1)).findAll();
@@ -116,29 +114,22 @@ class InventoryServiceTest {
 
     @Test
     void getAll_whenEmpty_shouldReturnEmptyList() {
-        // Arrange
         when(inventoryRepo.findAll()).thenReturn(Arrays.asList());
 
-        // Act
         List<InventoryResponse> result = inventoryService.getAll();
 
-        // Assert
         assertNotNull(result);
         assertEquals(0, result.size());
         verify(inventoryRepo, times(1)).findAll();
     }
 
-    // --- Tests pour getById() ---
     @Test
     void getById_shouldReturnResponse_whenFound() {
-        // Arrange
         when(inventoryRepo.findById(INVENTORY_ID)).thenReturn(Optional.of(mockInventory));
         when(mapper.toResponse(mockInventory)).thenReturn(mockResponse);
 
-        // Act
         InventoryResponse result = inventoryService.getById(INVENTORY_ID);
 
-        // Assert
         assertNotNull(result);
         assertEquals(INVENTORY_ID, result.getId());
         verify(inventoryRepo, times(1)).findById(INVENTORY_ID);
@@ -146,10 +137,8 @@ class InventoryServiceTest {
 
     @Test
     void getById_shouldThrowException_whenNotFound() {
-        // Arrange
         when(inventoryRepo.findById(INVENTORY_ID)).thenReturn(Optional.empty());
 
-        // Act & Assert
         RuntimeException thrown = assertThrows(RuntimeException.class, () -> {
             inventoryService.getById(INVENTORY_ID);
         });
@@ -157,19 +146,15 @@ class InventoryServiceTest {
         verify(inventoryRepo, times(1)).findById(INVENTORY_ID);
     }
 
-    // --- Tests pour create() ---
     @Test
     void create_shouldSaveInventoryAndReturnResponse() {
-        // Arrange
         when(productRepo.findById(PRODUCT_ID)).thenReturn(Optional.of(mockProduct));
         when(warehouseRepo.findById(WAREHOUSE_ID)).thenReturn(Optional.of(mockWarehouse));
         when(inventoryRepo.save(any(Inventory.class))).thenReturn(mockInventory);
         when(mapper.toResponse(mockInventory)).thenReturn(mockResponse);
 
-        // Act
         InventoryResponse result = inventoryService.create(mockRequest);
 
-        // Assert
         assertNotNull(result);
         assertEquals(INVENTORY_ID, result.getId());
         verify(inventoryRepo, times(1)).save(any(Inventory.class));
@@ -178,10 +163,8 @@ class InventoryServiceTest {
 
     @Test
     void create_shouldThrowException_whenProductNotFound() {
-        // Arrange
         when(productRepo.findById(PRODUCT_ID)).thenReturn(Optional.empty());
 
-        // Act & Assert
         RuntimeException thrown = assertThrows(RuntimeException.class, () -> {
             inventoryService.create(mockRequest);
         });
@@ -191,11 +174,9 @@ class InventoryServiceTest {
 
     @Test
     void create_shouldThrowException_whenWarehouseNotFound() {
-        // Arrange
         when(productRepo.findById(PRODUCT_ID)).thenReturn(Optional.of(mockProduct));
         when(warehouseRepo.findById(WAREHOUSE_ID)).thenReturn(Optional.empty());
 
-        // Act & Assert
         RuntimeException thrown = assertThrows(RuntimeException.class, () -> {
             inventoryService.create(mockRequest);
         });
@@ -203,10 +184,8 @@ class InventoryServiceTest {
         verify(inventoryRepo, never()).save(any(Inventory.class));
     }
 
-    // --- Tests pour update() ---
     @Test
     void update_shouldUpdateInventoryAndReturnResponse() {
-        // Arrange
         int newQtyOnHand = 100;
         int newQtyReserved = 20;
 
@@ -230,10 +209,8 @@ class InventoryServiceTest {
         when(inventoryRepo.save(existingInventory)).thenReturn(existingInventory);
         when(mapper.toResponse(existingInventory)).thenReturn(updatedResponse);
 
-        // Act
         InventoryResponse result = inventoryService.update(INVENTORY_ID, updateRequest);
 
-        // Assert
         assertNotNull(result);
         assertEquals(newQtyOnHand, result.getQtyOnHand());
         assertEquals(newQtyReserved, result.getQtyReserved());
@@ -243,13 +220,11 @@ class InventoryServiceTest {
 
     @Test
     void update_shouldThrowException_whenNotFound() {
-        // Arrange
         InventoryRequest updateRequest = new InventoryRequest();
         updateRequest.setQtyOnHand(100);
 
         when(inventoryRepo.findById(INVENTORY_ID)).thenReturn(Optional.empty());
 
-        // Act & Assert
         RuntimeException thrown = assertThrows(RuntimeException.class, () -> {
             inventoryService.update(INVENTORY_ID, updateRequest);
         });
@@ -259,30 +234,23 @@ class InventoryServiceTest {
         verify(inventoryRepo, never()).save(any(Inventory.class));
     }
 
-    // --- Tests pour delete() ---
     @Test
     void delete_shouldCallDeleteById() {
-        // Arrange
         doNothing().when(inventoryRepo).deleteById(INVENTORY_ID);
 
-        // Act
         inventoryService.delete(INVENTORY_ID);
 
-        // Assert
         verify(inventoryRepo, times(1)).deleteById(INVENTORY_ID);
     }
 
     @Test
     void delete_shouldCallDeleteByIdMultipleTimes() {
-        // Arrange
         doNothing().when(inventoryRepo).deleteById(anyLong());
 
-        // Act
         inventoryService.delete(1L);
         inventoryService.delete(2L);
         inventoryService.delete(3L);
 
-        // Assert
         verify(inventoryRepo, times(3)).deleteById(anyLong());
     }
 }
