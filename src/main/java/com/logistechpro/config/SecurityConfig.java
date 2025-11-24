@@ -2,6 +2,7 @@ package com.logistechpro.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -41,7 +42,7 @@ public class SecurityConfig {
             User domainUser = userRepository.findByEmail(username)
                     .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
             if (!domainUser.isActive()) {
-                throw new UsernameNotFoundException("Invalid credentials: User is disabled.");
+                throw new BadCredentialsException("Invalid credentials");
             }
             return org.springframework.security.core.userdetails.User.withUsername(domainUser.getEmail())
                     .password(domainUser.getPasswordHash())
