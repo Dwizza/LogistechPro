@@ -40,13 +40,14 @@ public class SecurityConfig {
         return username -> {
             User domainUser = userRepository.findByEmail(username)
                     .orElseThrow(() -> new UsernameNotFoundException("Invalid credentials"));
+
             if (!domainUser.isActive()) {
-                    throw new UsernameNotFoundException("Invalid credentials");
+                throw new UsernameNotFoundException("Invalid credentials");
             }
+
             return org.springframework.security.core.userdetails.User.withUsername(domainUser.getEmail())
                     .password(domainUser.getPasswordHash())
                     .roles(domainUser.getRole().name())
-                    .disabled(!domainUser.isActive())
                     .build();
         };
     }
