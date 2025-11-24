@@ -28,8 +28,8 @@ public class SecurityConfig {
         this.userRepository = userRepository;
     }
 
-    private static final String warehouseManager = "WAREHOUSE_MANAGER";
-    private static final String admin = "ADMIN";
+    private static final String WAREHOUSE_MANAGER = "WAREHOUSE_MANAGER";
+    private static final String ADMIN = "ADMIN";
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -59,17 +59,17 @@ public class SecurityConfig {
                 .authorizeHttpRequests((requests) ->
                         requests
                                 .requestMatchers("/api/auth/**").permitAll()
-                                .requestMatchers("/api/admin/**").hasRole(admin)
-                                .requestMatchers("/api/products/**").hasRole(admin)
-                                .requestMatchers("/api/suppliers/**").hasRole(admin)
-                                .requestMatchers("/api/warehouses/**").hasRole(admin)
-                                .requestMatchers("/api/purchase-orders/**").hasAnyRole(admin,warehouseManager)
-                                .requestMatchers("/api/inventories/**").hasAnyRole(admin,warehouseManager)
-                                .requestMatchers("/api/reservations/**").hasAnyRole(admin,warehouseManager)
-                                .requestMatchers("/api/movements/**").hasAnyRole(admin,warehouseManager)
-                                .requestMatchers("/api/carriers/**").hasAnyRole(admin,warehouseManager)
-                                .requestMatchers("/api/shipments/**").hasAnyRole(admin,warehouseManager)
-                                .requestMatchers("/api/sales-orders/**").hasAnyRole(admin,warehouseManager)
+                                .requestMatchers("/api/admin/**").hasRole(ADMIN)
+                                .requestMatchers("/api/products/**").hasRole(ADMIN)
+                                .requestMatchers("/api/suppliers/**").hasRole(ADMIN)
+                                .requestMatchers("/api/warehouses/**").hasRole(ADMIN)
+                                .requestMatchers("/api/purchase-orders/**").hasAnyRole(ADMIN,WAREHOUSE_MANAGER)
+                                .requestMatchers("/api/inventories/**").hasAnyRole(ADMIN,WAREHOUSE_MANAGER)
+                                .requestMatchers("/api/reservations/**").hasAnyRole(ADMIN,WAREHOUSE_MANAGER)
+                                .requestMatchers("/api/movements/**").hasAnyRole(ADMIN,WAREHOUSE_MANAGER)
+                                .requestMatchers("/api/carriers/**").hasAnyRole(ADMIN,WAREHOUSE_MANAGER)
+                                .requestMatchers("/api/shipments/**").hasAnyRole(ADMIN,WAREHOUSE_MANAGER)
+                                .requestMatchers("/api/sales-orders/**").hasAnyRole(ADMIN,WAREHOUSE_MANAGER)
                                 .requestMatchers("/actuator/**").permitAll()
                                 .requestMatchers("/api/auth/register").permitAll()
                                 .anyRequest().authenticated()
