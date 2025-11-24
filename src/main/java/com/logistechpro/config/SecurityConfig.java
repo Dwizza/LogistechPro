@@ -39,7 +39,7 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService() {
         return username -> {
             User domainUser = userRepository.findByEmail(username)
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+                    .orElseThrow(() -> new UsernameNotFoundException("Invalid credentials"));
             if (!domainUser.isActive()) {
                     throw new UsernameNotFoundException("Invalid credentials");
             }
