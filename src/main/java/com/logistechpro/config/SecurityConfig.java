@@ -41,7 +41,7 @@ public class SecurityConfig {
             User domainUser = userRepository.findByEmail(username)
                     .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
             if (!domainUser.isActive()) {
-                throw new UsernameNotFoundException("User inactive: " + username);
+                    throw new UsernameNotFoundException("Invalid credentials");
             }
             return org.springframework.security.core.userdetails.User.withUsername(domainUser.getEmail())
                     .password(domainUser.getPasswordHash())
@@ -54,7 +54,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain (HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                .csrf(csrf -> csrf.disable())
+                .csrf(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((requests) ->
                         requests
