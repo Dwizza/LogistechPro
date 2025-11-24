@@ -1,6 +1,6 @@
 package com.logistechpro.controller;
 
-import com.logistechpro.dto.SalesOrderRequest;
+import com.logistechpro.dto.Request.SalesOrderRequest;
 import com.logistechpro.dto.Response.SalesOrderResponse;
 import com.logistechpro.service.SalesOrderService;
 import jakarta.validation.Valid;

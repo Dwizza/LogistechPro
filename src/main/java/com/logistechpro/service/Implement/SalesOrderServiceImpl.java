@@ -1,7 +1,7 @@
 package com.logistechpro.service.Implement;
 
 import com.logistechpro.dto.Response.SalesOrderResponse;
-import com.logistechpro.dto.SalesOrderRequest;
+import com.logistechpro.dto.Request.SalesOrderRequest;
 import com.logistechpro.mapper.SalesOrderMapper;
 import com.logistechpro.models.*;
 import com.logistechpro.models.Enums.OrderStatus;
@@ -42,14 +42,16 @@ public class SalesOrderServiceImpl implements SalesOrderService {
         order.setClient(client);
         order.setWarehouse(warehouse);
 
-        request.getLines().forEach(lineReq -> {
-            Product product = productRepository.findById(lineReq.getProductId())
-                    .orElseThrow(() -> new RuntimeException("Product not found"));
-            SalesOrderLine line = mapper.toEntity(lineReq);
-            line.setProduct(product);
-            line.setSalesOrder(order);
-            order.getLines().add(line);
-        });
+        if (request.getLines() != null) {
+            request.getLines().forEach(lineReq -> {
+                Product product = productRepository.findById(lineReq.getProductId())
+                        .orElseThrow(() -> new RuntimeException("Product not found"));
+                SalesOrderLine line = mapper.toEntity(lineReq);
+                line.setProduct(product);
+                line.setSalesOrder(order);
+                order.getLines().add(line);
+            });
+        }
 
         SalesOrder saved = salesOrderRepository.save(order);
         return mapper.toResponse(saved);

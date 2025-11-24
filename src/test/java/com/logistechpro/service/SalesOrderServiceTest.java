@@ -2,7 +2,7 @@ package com.logistechpro.service;
 
 import com.logistechpro.dto.Request.SalesOrderLineRequest;
 import com.logistechpro.dto.Response.SalesOrderResponse;
-import com.logistechpro.dto.SalesOrderRequest;
+import com.logistechpro.dto.Request.SalesOrderRequest;
 import com.logistechpro.mapper.SalesOrderMapper;
 import com.logistechpro.models.*;
 import com.logistechpro.models.Enums.OrderStatus;

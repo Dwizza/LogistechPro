@@ -1,7 +1,7 @@
 package com.logistechpro.service;
 
 import com.logistechpro.dto.Response.SalesOrderResponse;
-import com.logistechpro.dto.SalesOrderRequest;
+import com.logistechpro.dto.Request.SalesOrderRequest;
 
 import java.util.List;
 
