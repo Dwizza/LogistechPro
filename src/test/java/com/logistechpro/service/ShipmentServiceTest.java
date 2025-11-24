@@ -6,7 +6,7 @@ import com.logistechpro.mapper.ShipmentMapper;
 import com.logistechpro.models.*;
 import com.logistechpro.models.Enums.*;
 import com.logistechpro.repository.*;
-import com.logistechpro.Services.Impl.ShipmentServiceImpl;
+import com.logistechpro.service.Implement.ShipmentServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
