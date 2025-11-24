@@ -39,12 +39,10 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService() {
         return username -> {
             User domainUser = userRepository.findByEmail(username)
-                    .orElseThrow(() -> new UsernameNotFoundException("Invalid credentials"));
-
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
             if (!domainUser.isActive()) {
-                throw new UsernameNotFoundException("Invalid credentials");
+                throw new UsernameNotFoundException("Invalid credentials: User is disabled.");
             }
-
             return org.springframework.security.core.userdetails.User.withUsername(domainUser.getEmail())
                     .password(domainUser.getPasswordHash())
                     .roles(domainUser.getRole().name())
