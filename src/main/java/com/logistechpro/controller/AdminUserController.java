@@ -1,4 +1,4 @@
-package com.logistechpro.Controller;
+package com.logistechpro.controller;
 
 import com.logistechpro.DTO.Request.WarehouseManagerCreateRequest;
 import com.logistechpro.DTO.Response.UserResponse;

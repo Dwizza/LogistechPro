@@ -1,4 +1,4 @@
-package com.logistechpro.Controller;
+package com.logistechpro.controller;
 
 import com.logistechpro.DTO.Request.SupplierRequest;
 import com.logistechpro.DTO.Response.SupplierResponse;

@@ -1,4 +1,4 @@
-package com.logistechpro.Config;
+package com.logistechpro.config;
 
 import com.logistechpro.Models.Enums.Role;
 import com.logistechpro.Models.User;
