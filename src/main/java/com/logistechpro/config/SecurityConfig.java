@@ -21,10 +21,14 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    private final String warehouse_manager = "WAREHOUSE_MANAGER";
+    public SecurityConfig(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    private static final String warehouseManager = "WAREHOUSE_MANAGER";
+    private static final String admin = "ADMIN";
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -55,17 +59,17 @@ public class SecurityConfig {
                 .authorizeHttpRequests((requests) ->
                         requests
                                 .requestMatchers("/api/auth/**").permitAll()
-                                .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                                .requestMatchers("/api/products/**").hasRole("ADMIN")
-                                .requestMatchers("/api/suppliers/**").hasRole("ADMIN")
-                                .requestMatchers("/api/warehouses/**").hasRole("ADMIN")
-                                .requestMatchers("/api/purchase-orders/**").hasAnyRole("ADMIN",warehouse_manager)
-                                .requestMatchers("/api/inventories/**").hasAnyRole("ADMIN",warehouse_manager)
-                                .requestMatchers("/api/reservations/**").hasAnyRole("ADMIN",warehouse_manager)
-                                .requestMatchers("/api/movements/**").hasAnyRole("ADMIN",warehouse_manager)
-                                .requestMatchers("/api/carriers/**").hasAnyRole("ADMIN",warehouse_manager)
-                                .requestMatchers("/api/shipments/**").hasAnyRole("ADMIN",warehouse_manager)
-                                .requestMatchers("/api/sales-orders/**").hasAnyRole("ADMIN",warehouse_manager)
+                                .requestMatchers("/api/admin/**").hasRole(admin)
+                                .requestMatchers("/api/products/**").hasRole(admin)
+                                .requestMatchers("/api/suppliers/**").hasRole(admin)
+                                .requestMatchers("/api/warehouses/**").hasRole(admin)
+                                .requestMatchers("/api/purchase-orders/**").hasAnyRole(admin,warehouseManager)
+                                .requestMatchers("/api/inventories/**").hasAnyRole(admin,warehouseManager)
+                                .requestMatchers("/api/reservations/**").hasAnyRole(admin,warehouseManager)
+                                .requestMatchers("/api/movements/**").hasAnyRole(admin,warehouseManager)
+                                .requestMatchers("/api/carriers/**").hasAnyRole(admin,warehouseManager)
+                                .requestMatchers("/api/shipments/**").hasAnyRole(admin,warehouseManager)
+                                .requestMatchers("/api/sales-orders/**").hasAnyRole(admin,warehouseManager)
                                 .requestMatchers("/actuator/**").permitAll()
                                 .requestMatchers("/api/auth/register").permitAll()
                                 .anyRequest().authenticated()
