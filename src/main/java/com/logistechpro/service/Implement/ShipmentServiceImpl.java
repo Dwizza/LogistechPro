@@ -1,4 +1,4 @@
-package com.logistechpro.Services.Impl;
+package com.logistechpro.service.Implement;
 
 import com.logistechpro.dto.Request.ShipmentRequest;
 import com.logistechpro.dto.Response.ShipmentResponse;

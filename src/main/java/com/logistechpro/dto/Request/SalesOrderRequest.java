@@ -1,4 +1,4 @@
-package com.logistechpro.dto;
+package com.logistechpro.dto.Request;
 
 import com.logistechpro.dto.Request.SalesOrderLineRequest;
 import jakarta.validation.Valid;
