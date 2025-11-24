@@ -1,6 +1,5 @@
 package com.logistechpro.dto.Request;
 
-import com.logistechpro.dto.Request.SalesOrderLineRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
