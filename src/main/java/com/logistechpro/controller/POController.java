@@ -1,8 +1,8 @@
 package com.logistechpro.controller;
 
-import com.logistechpro.DTO.Request.PORequest;
-import com.logistechpro.DTO.Response.POResponse;
-import com.logistechpro.Service.POService;
+import com.logistechpro.dto.Request.PORequest;
+import com.logistechpro.dto.Response.POResponse;
+import com.logistechpro.service.POService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;

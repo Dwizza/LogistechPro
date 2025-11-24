@@ -1,8 +1,8 @@
 package com.logistechpro.controller;
 
-import com.logistechpro.DTO.Request.CarrierRequest;
-import com.logistechpro.DTO.Response.CarrierResponse;
-import com.logistechpro.Service.CarrierService;
+import com.logistechpro.dto.Request.CarrierRequest;
+import com.logistechpro.dto.Response.CarrierResponse;
+import com.logistechpro.service.CarrierService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;

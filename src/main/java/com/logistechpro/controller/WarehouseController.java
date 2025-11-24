@@ -1,8 +1,8 @@
 package com.logistechpro.controller;
 
-import com.logistechpro.DTO.Request.WarehouseRequest;
-import com.logistechpro.DTO.Response.WarehouseResponse;
-import com.logistechpro.Service.WarehouseService;
+import com.logistechpro.dto.Request.WarehouseRequest;
+import com.logistechpro.dto.Response.WarehouseResponse;
+import com.logistechpro.service.WarehouseService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

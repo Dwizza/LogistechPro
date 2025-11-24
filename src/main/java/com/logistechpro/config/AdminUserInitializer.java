@@ -1,8 +1,8 @@
 package com.logistechpro.config;
 
-import com.logistechpro.Models.Enums.Role;
-import com.logistechpro.Models.User;
-import com.logistechpro.Repository.UserRepository;
+import com.logistechpro.models.Enums.Role;
+import com.logistechpro.models.User;
+import com.logistechpro.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

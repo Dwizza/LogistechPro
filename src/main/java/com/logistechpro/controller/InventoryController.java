@@ -1,9 +1,9 @@
 package com.logistechpro.controller;
 
 
-import com.logistechpro.DTO.Request.InventoryRequest;
-import com.logistechpro.DTO.Response.InventoryResponse;
-import com.logistechpro.Service.InventoryService;
+import com.logistechpro.dto.Request.InventoryRequest;
+import com.logistechpro.dto.Response.InventoryResponse;
+import com.logistechpro.service.InventoryService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;

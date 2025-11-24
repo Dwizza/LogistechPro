@@ -1,7 +1,7 @@
 package com.logistechpro.controller;
 
-import com.logistechpro.DTO.Response.ReservationResponse;
-import com.logistechpro.Service.ReservationService;
+import com.logistechpro.dto.Response.ReservationResponse;
+import com.logistechpro.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;

@@ -1,8 +1,8 @@
 package com.logistechpro.controller;
 
-import com.logistechpro.DTO.Request.WarehouseManagerCreateRequest;
-import com.logistechpro.DTO.Response.UserResponse;
-import com.logistechpro.Service.AdminUserService;
+import com.logistechpro.dto.Request.WarehouseManagerCreateRequest;
+import com.logistechpro.dto.Response.UserResponse;
+import com.logistechpro.service.AdminUserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

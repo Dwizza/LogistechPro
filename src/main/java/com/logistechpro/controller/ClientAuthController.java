@@ -1,9 +1,9 @@
 package com.logistechpro.controller;
 
-import com.logistechpro.DTO.Request.ClientLoginRequest;
-import com.logistechpro.DTO.Request.ClientRegisterRequest;
-import com.logistechpro.DTO.Response.ClientResponse;
-import com.logistechpro.Service.ClientAuthService;
+import com.logistechpro.dto.Request.ClientLoginRequest;
+import com.logistechpro.dto.Request.ClientRegisterRequest;
+import com.logistechpro.dto.Response.ClientResponse;
+import com.logistechpro.service.ClientAuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

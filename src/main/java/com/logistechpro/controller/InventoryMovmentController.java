@@ -1,9 +1,9 @@
 package com.logistechpro.controller;
 
-import com.logistechpro.DTO.Request.InventoryMovmentRequest;
-import com.logistechpro.DTO.Response.InventoryMovmentResponse;
-import com.logistechpro.Models.Enums.MovementType;
-import com.logistechpro.Service.InventoryMovmentService;
+import com.logistechpro.dto.Request.InventoryMovmentRequest;
+import com.logistechpro.dto.Response.InventoryMovmentResponse;
+import com.logistechpro.models.Enums.MovementType;
+import com.logistechpro.service.InventoryMovmentService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;

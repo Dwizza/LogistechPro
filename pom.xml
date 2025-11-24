@@ -160,16 +160,16 @@
                 <configuration>
 
                     <includes>
-                        <include>**/Service/**</include>
+                        <include>**/service/**</include>
                     </includes>
                     <excludes>
                         <exclude>**/LogistechProApplication*</exclude>
-                        <exclude>**/Config/**</exclude>
-                        <exclude>**/Controller/**</exclude>
-                        <exclude>**/Dto/**</exclude>
-                        <exclude>**/Models/**</exclude>
-                        <exclude>**/Mapper/**</exclude>
-                        <exclude>**/Repository/**</exclude>
+                        <exclude>**/config/**</exclude>
+                        <exclude>**/controller/**</exclude>
+                        <exclude>**/dto/**</exclude>
+                        <exclude>**/models/**</exclude>
+                        <exclude>**/mapper/**</exclude>
+                        <exclude>**/repository/**</exclude>
                     </excludes>
                 </configuration>
 
