@@ -1,35 +1,39 @@
 package com.logistechpro.config;
 
+import com.logistechpro.repository.UserRepository;
+import com.logistechpro.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.beans.factory.annotation.Autowired;
-import com.logistechpro.repository.UserRepository;
-import com.logistechpro.models.User;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import static org.springframework.security.core.userdetails.User.withUsername;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
 
+    private static final String ADMIN = "ADMIN";
+    private static final String WAREHOUSE_MANAGER = "WAREHOUSE_MANAGER";
+
     private final UserRepository userRepository;
+
 
     public SecurityConfig(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-
-    private static final String WAREHOUSE_MANAGER = "WAREHOUSE_MANAGER";
-    private static final String ADMIN = "ADMIN";
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -37,44 +41,52 @@ public class SecurityConfig {
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
-        return username -> {
-            User domainUser = userRepository.findByEmail(username)
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
-            if (!domainUser.isActive()) {
-                throw new BadCredentialsException("Invalid credentials");
-            }
-            return org.springframework.security.core.userdetails.User.withUsername(domainUser.getEmail())
-                    .password(domainUser.getPasswordHash())
-                    .roles(domainUser.getRole().name())
-                    .build();
-        };
+    UserDetailsService userDetailsService(UserRepository repo) {
+        return email -> repo.findByEmail(email)
+                .map(u -> User.withUsername(u.getEmail())
+                        .password(u.getPasswordHash())
+                        .roles(u.getRole().name())
+                        .build())
+                .orElseThrow();
+    }
+
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain (HttpSecurity httpSecurity) throws Exception {
-        httpSecurity
-                .csrf(Customizer.withDefaults())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests((requests) ->
-                        requests
-                                .requestMatchers("/api/auth/**").permitAll()
-                                .requestMatchers("/api/admin/**").hasRole(ADMIN)
-                                .requestMatchers("/api/products/**").hasRole(ADMIN)
-                                .requestMatchers("/api/suppliers/**").hasRole(ADMIN)
-                                .requestMatchers("/api/warehouses/**").hasRole(ADMIN)
-                                .requestMatchers("/api/purchase-orders/**").hasAnyRole(ADMIN,WAREHOUSE_MANAGER)
-                                .requestMatchers("/api/inventories/**").hasAnyRole(ADMIN,WAREHOUSE_MANAGER)
-                                .requestMatchers("/api/reservations/**").hasAnyRole(ADMIN,WAREHOUSE_MANAGER)
-                                .requestMatchers("/api/movements/**").hasAnyRole(ADMIN,WAREHOUSE_MANAGER)
-                                .requestMatchers("/api/carriers/**").hasAnyRole(ADMIN,WAREHOUSE_MANAGER)
-                                .requestMatchers("/api/shipments/**").hasAnyRole(ADMIN,WAREHOUSE_MANAGER)
-                                .requestMatchers("/api/sales-orders/**").hasAnyRole(ADMIN,WAREHOUSE_MANAGER)
-                                .requestMatchers("/actuator/**").permitAll()
-                                .requestMatchers("/api/auth/register").permitAll()
-                                .anyRequest().authenticated()
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
+
+        http
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                .httpBasic(Customizer.withDefaults());
-        return httpSecurity.build();
+
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/actuator/**").permitAll()
+
+                        .requestMatchers("/api/admin/**").hasRole(ADMIN)
+                        .requestMatchers("/api/products/**").hasRole(ADMIN)
+                        .requestMatchers("/api/suppliers/**").hasRole(ADMIN)
+                        .requestMatchers("/api/warehouses/**").hasRole(ADMIN)
+
+                        .requestMatchers("/api/purchase-orders/**").hasAnyRole(ADMIN, WAREHOUSE_MANAGER)
+                        .requestMatchers("/api/inventories/**").hasAnyRole(ADMIN, WAREHOUSE_MANAGER)
+                        .requestMatchers("/api/reservations/**").hasAnyRole(ADMIN, WAREHOUSE_MANAGER)
+                        .requestMatchers("/api/movements/**").hasAnyRole(ADMIN, WAREHOUSE_MANAGER)
+                        .requestMatchers("/api/carriers/**").hasAnyRole(ADMIN, WAREHOUSE_MANAGER)
+                        .requestMatchers("/api/shipments/**").hasAnyRole(ADMIN, WAREHOUSE_MANAGER)
+                        .requestMatchers("/api/sales-orders/**").hasAnyRole(ADMIN, WAREHOUSE_MANAGER)
+
+                        .anyRequest().authenticated()
+                )
+
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
     }
 }

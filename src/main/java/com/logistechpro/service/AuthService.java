@@ -1,11 +1,11 @@
 package com.logistechpro.service;
 
-import com.logistechpro.dto.Request.ClientLoginRequest;
+import com.logistechpro.dto.Request.LoginRequest;
 import com.logistechpro.dto.Request.ClientRegisterRequest;
+import com.logistechpro.dto.Response.AuthResponse;
 import com.logistechpro.dto.Response.ClientResponse;
 
-public interface ClientAuthService {
+public interface AuthService {
     ClientResponse register(ClientRegisterRequest request);
-    ClientResponse login(ClientLoginRequest request);
+    AuthResponse login(LoginRequest request);
 }
-
