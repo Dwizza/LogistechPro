@@ -18,9 +18,7 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    /**
-     * ملاحظة: للـ HS256 خاص secret يكون على الأقل 32 bytes.
-     */
+
     @Value("${app.jwt.secret:${SECRET_KEY:}}")
     private String secret;
 
@@ -30,9 +28,7 @@ public class JwtService {
     @Value("${app.jwt.refresh-expiration-ms:604800000}") // 7 days
     private long refreshTokenExpirationMs;
 
-    /**
-     * Backward-compatible method: يولّد access token.
-     */
+
     public String generateToken(UserDetails userDetails) {
         return generateAccessToken(userDetails);
     }

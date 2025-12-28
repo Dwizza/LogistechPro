@@ -53,8 +53,43 @@ services:
       - jenkins_home:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.1
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    ports:
+      - "9200:9200"
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.11.1
+    container_name: kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:8.11.1
+    container_name: filebeat
+    user: root
+    volumes:
+      - ./logs:/var/log/app
+      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+    command: [ "filebeat", "-e", "--strict.perms=false" ]
+    depends_on:
+      - elasticsearch
+      - kibana
+
 volumes:
   db_data_Logostech:
   sonarqube_data:
   sonarqube_extensions:
   jenkins_home:
+  esdata:

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 public class AuthController {
 
+
     private final AuthService authService;
 
     @PostMapping("/login")
@@ -30,4 +31,6 @@ public class AuthController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+
 }
