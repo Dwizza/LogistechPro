@@ -1,6 +1,6 @@
 package com.logistechpro.mapper;
 
-import com.logistechpro.dto.Response.InventoryResponse;
+import com.logistechpro.dto.response.InventoryResponse;
 import com.logistechpro.models.Inventory;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

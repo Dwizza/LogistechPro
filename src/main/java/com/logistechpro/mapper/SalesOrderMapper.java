@@ -1,9 +1,9 @@
 package com.logistechpro.mapper;
 
-import com.logistechpro.dto.Request.SalesOrderLineRequest;
-import com.logistechpro.dto.Response.SalesOrderLineResponse;
-import com.logistechpro.dto.Response.SalesOrderResponse;
-import com.logistechpro.dto.Request.SalesOrderRequest;
+import com.logistechpro.dto.request.SalesOrderLineRequest;
+import com.logistechpro.dto.response.SalesOrderLineResponse;
+import com.logistechpro.dto.response.SalesOrderResponse;
+import com.logistechpro.dto.request.SalesOrderRequest;
 import com.logistechpro.models.*;
 import org.mapstruct.*;
 

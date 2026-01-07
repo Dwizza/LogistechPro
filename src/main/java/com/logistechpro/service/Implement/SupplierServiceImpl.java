@@ -1,7 +1,7 @@
 package com.logistechpro.service.Implement;
 
-import com.logistechpro.dto.Request.SupplierRequest;
-import com.logistechpro.dto.Response.SupplierResponse;
+import com.logistechpro.dto.request.SupplierRequest;
+import com.logistechpro.dto.response.SupplierResponse;
 import com.logistechpro.mapper.SupplierMapper;
 import com.logistechpro.models.Supplier;
 import com.logistechpro.repository.SupplierRepository;

@@ -1,6 +1,6 @@
 package com.logistechpro.mapper;
 
-import com.logistechpro.dto.Response.ShipmentResponse;
+import com.logistechpro.dto.response.ShipmentResponse;
 import com.logistechpro.models.Shipment;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

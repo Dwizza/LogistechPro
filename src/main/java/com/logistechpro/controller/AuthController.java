@@ -1,9 +1,9 @@
 package com.logistechpro.controller;
 
-import com.logistechpro.dto.Request.ClientRegisterRequest;
-import com.logistechpro.dto.Request.LoginRequest;
-import com.logistechpro.dto.Response.AuthResponse;
-import com.logistechpro.dto.Response.ClientResponse;
+import com.logistechpro.dto.request.ClientRegisterRequest;
+import com.logistechpro.dto.request.LoginRequest;
+import com.logistechpro.dto.response.AuthResponse;
+import com.logistechpro.dto.response.ClientResponse;
 import com.logistechpro.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

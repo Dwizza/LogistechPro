@@ -1,7 +1,7 @@
 package com.logistechpro.service;
 
-import com.logistechpro.dto.Request.CarrierRequest;
-import com.logistechpro.dto.Response.CarrierResponse;
+import com.logistechpro.dto.request.CarrierRequest;
+import com.logistechpro.dto.response.CarrierResponse;
 import com.logistechpro.mapper.CarrierMapper;
 import com.logistechpro.models.Carrier;
 import com.logistechpro.models.Enums.CarrierStatus;

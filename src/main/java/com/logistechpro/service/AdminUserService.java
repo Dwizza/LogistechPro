@@ -1,7 +1,7 @@
 package com.logistechpro.service;
 
-import com.logistechpro.dto.Request.WarehouseManagerCreateRequest;
-import com.logistechpro.dto.Response.UserResponse;
+import com.logistechpro.dto.request.WarehouseManagerCreateRequest;
+import com.logistechpro.dto.response.UserResponse;
 
 public interface AdminUserService {
     UserResponse createWarehouseManager(WarehouseManagerCreateRequest request);

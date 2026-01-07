@@ -1,6 +1,6 @@
 package com.logistechpro.service;
 
-import com.logistechpro.dto.Response.ReservationResponse;
+import com.logistechpro.dto.response.ReservationResponse;
 
 public interface ReservationService {
     ReservationResponse reserveOrder(Long orderId);

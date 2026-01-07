@@ -1,7 +1,7 @@
 package com.logistechpro.service.Implement;
 
-import com.logistechpro.dto.Request.PORequest;
-import com.logistechpro.dto.Response.POResponse;
+import com.logistechpro.dto.request.PORequest;
+import com.logistechpro.dto.response.POResponse;
 import com.logistechpro.mapper.POMapper;
 import com.logistechpro.models.*;
 import com.logistechpro.models.Enums.MovementType;

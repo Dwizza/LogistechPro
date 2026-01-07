@@ -1,7 +1,7 @@
 package com.logistechpro.service.Implement;
 
-import com.logistechpro.dto.Request.WarehouseRequest;
-import com.logistechpro.dto.Response.WarehouseResponse;
+import com.logistechpro.dto.request.WarehouseRequest;
+import com.logistechpro.dto.response.WarehouseResponse;
 import com.logistechpro.mapper.WarehouseMapper;
 import com.logistechpro.models.Warehouse;
 import com.logistechpro.repository.WarehouseRepository;

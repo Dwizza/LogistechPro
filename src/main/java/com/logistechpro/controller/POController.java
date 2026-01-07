@@ -1,7 +1,7 @@
 package com.logistechpro.controller;
 
-import com.logistechpro.dto.Request.PORequest;
-import com.logistechpro.dto.Response.POResponse;
+import com.logistechpro.dto.request.PORequest;
+import com.logistechpro.dto.response.POResponse;
 import com.logistechpro.service.POService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

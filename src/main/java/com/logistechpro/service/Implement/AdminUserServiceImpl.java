@@ -1,7 +1,7 @@
 package com.logistechpro.service.Implement;
 
-import com.logistechpro.dto.Request.WarehouseManagerCreateRequest;
-import com.logistechpro.dto.Response.UserResponse;
+import com.logistechpro.dto.request.WarehouseManagerCreateRequest;
+import com.logistechpro.dto.response.UserResponse;
 import com.logistechpro.models.Enums.Role;
 import com.logistechpro.models.User;
 import com.logistechpro.repository.UserRepository;

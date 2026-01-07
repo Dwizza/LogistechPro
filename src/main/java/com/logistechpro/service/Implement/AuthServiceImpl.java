@@ -1,9 +1,9 @@
 package com.logistechpro.service.Implement;
 
-import com.logistechpro.dto.Request.LoginRequest;
-import com.logistechpro.dto.Request.ClientRegisterRequest;
-import com.logistechpro.dto.Response.AuthResponse;
-import com.logistechpro.dto.Response.ClientResponse;
+import com.logistechpro.dto.request.LoginRequest;
+import com.logistechpro.dto.request.ClientRegisterRequest;
+import com.logistechpro.dto.response.AuthResponse;
+import com.logistechpro.dto.response.ClientResponse;
 import com.logistechpro.mapper.ClientMapper;
 import com.logistechpro.models.Client;
 import com.logistechpro.models.User;
@@ -15,6 +15,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -47,14 +48,14 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse login(LoginRequest request) {
-        authenticationManager.authenticate(
+
+        Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
 
-        UserDetails userDetails = userRepository.findByEmail(request.getEmail())
-                .orElseThrow();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
-        String accessToken = jwtService.generateToken(userDetails);
+        String accessToken = jwtService.generateAccessToken(userDetails);
         String refreshToken = jwtService.generateRefreshToken(userDetails);
 
         return new AuthResponse(accessToken, refreshToken);

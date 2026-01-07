@@ -1,6 +1,6 @@
 package com.logistechpro.controller;
 
-import com.logistechpro.dto.Response.ReservationResponse;
+import com.logistechpro.dto.response.ReservationResponse;
 import com.logistechpro.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,4 +26,3 @@ public class ReservationController {
         return ResponseEntity.ok(reservationService.recheckReservation(orderId));
     }
 }
-

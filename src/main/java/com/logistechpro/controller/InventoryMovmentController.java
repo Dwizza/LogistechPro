@@ -1,7 +1,7 @@
 package com.logistechpro.controller;
 
-import com.logistechpro.dto.Request.InventoryMovmentRequest;
-import com.logistechpro.dto.Response.InventoryMovmentResponse;
+import com.logistechpro.dto.request.InventoryMovmentRequest;
+import com.logistechpro.dto.response.InventoryMovmentResponse;
 import com.logistechpro.models.Enums.MovementType;
 import com.logistechpro.service.InventoryMovmentService;
 import jakarta.validation.Valid;
@@ -47,4 +47,3 @@ public class InventoryMovmentController {
         return ResponseEntity.ok(service.adjust(req));
     }
 }
-

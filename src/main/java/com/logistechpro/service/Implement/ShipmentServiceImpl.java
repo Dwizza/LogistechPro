@@ -1,7 +1,7 @@
 package com.logistechpro.service.Implement;
 
-import com.logistechpro.dto.Request.ShipmentRequest;
-import com.logistechpro.dto.Response.ShipmentResponse;
+import com.logistechpro.dto.request.ShipmentRequest;
+import com.logistechpro.dto.response.ShipmentResponse;
 import com.logistechpro.mapper.ShipmentMapper;
 import com.logistechpro.models.*;
 import com.logistechpro.models.Enums.*;

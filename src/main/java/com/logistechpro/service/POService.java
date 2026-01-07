@@ -1,7 +1,7 @@
 package com.logistechpro.service;
 
-import com.logistechpro.dto.Request.PORequest;
-import com.logistechpro.dto.Response.POResponse;
+import com.logistechpro.dto.request.PORequest;
+import com.logistechpro.dto.response.POResponse;
 
 public interface POService {
         POResponse create(PORequest request);

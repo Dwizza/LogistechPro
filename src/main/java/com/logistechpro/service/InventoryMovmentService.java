@@ -1,7 +1,7 @@
 package com.logistechpro.service;
 
-import com.logistechpro.dto.Request.InventoryMovmentRequest;
-import com.logistechpro.dto.Response.InventoryMovmentResponse;
+import com.logistechpro.dto.request.InventoryMovmentRequest;
+import com.logistechpro.dto.response.InventoryMovmentResponse;
 
 import java.util.List;
 

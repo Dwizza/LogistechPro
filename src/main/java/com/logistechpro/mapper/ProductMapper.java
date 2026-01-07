@@ -1,8 +1,8 @@
 package com.logistechpro.mapper;
 
 import com.logistechpro.models.Product;
-import com.logistechpro.dto.Request.ProductRequest;
-import com.logistechpro.dto.Response.ProductResponse;
+import com.logistechpro.dto.request.ProductRequest;
+import com.logistechpro.dto.response.ProductResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;

@@ -1,7 +1,7 @@
 package com.logistechpro.service.Implement;
 
-import com.logistechpro.dto.Response.SalesOrderResponse;
-import com.logistechpro.dto.Request.SalesOrderRequest;
+import com.logistechpro.dto.response.SalesOrderResponse;
+import com.logistechpro.dto.request.SalesOrderRequest;
 import com.logistechpro.mapper.SalesOrderMapper;
 import com.logistechpro.models.*;
 import com.logistechpro.models.Enums.OrderStatus;

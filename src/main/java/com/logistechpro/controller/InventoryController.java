@@ -1,8 +1,8 @@
 package com.logistechpro.controller;
 
 
-import com.logistechpro.dto.Request.InventoryRequest;
-import com.logistechpro.dto.Response.InventoryResponse;
+import com.logistechpro.dto.request.InventoryRequest;
+import com.logistechpro.dto.response.InventoryResponse;
 import com.logistechpro.service.InventoryService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

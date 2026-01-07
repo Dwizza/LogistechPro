@@ -1,7 +1,7 @@
 package com.logistechpro.controller;
 
-import com.logistechpro.dto.Request.SalesOrderRequest;
-import com.logistechpro.dto.Response.SalesOrderResponse;
+import com.logistechpro.dto.request.SalesOrderRequest;
+import com.logistechpro.dto.response.SalesOrderResponse;
 import com.logistechpro.service.SalesOrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
 package com.logistechpro.service.Implement;
 
-import com.logistechpro.dto.Response.ReservationResponse;
+import com.logistechpro.dto.response.ReservationResponse;
 import com.logistechpro.models.*;
 import com.logistechpro.models.Enums.MovementType;
 import com.logistechpro.models.Enums.OrderStatus;

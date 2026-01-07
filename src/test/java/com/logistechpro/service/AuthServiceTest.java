@@ -1,8 +1,7 @@
 package com.logistechpro.service;
 
-import com.logistechpro.dto.Request.LoginRequest;
-import com.logistechpro.dto.Request.ClientRegisterRequest;
-import com.logistechpro.dto.Response.ClientResponse;
+import com.logistechpro.dto.request.ClientRegisterRequest;
+import com.logistechpro.dto.response.ClientResponse;
 import com.logistechpro.mapper.ClientMapper;
 import com.logistechpro.models.Client;
 import com.logistechpro.models.Enums.Role;
@@ -59,48 +58,6 @@ class AuthServiceTest {
         when(userRepository.findByEmail("c@test.com")).thenReturn(Optional.of(new User()));
         assertThrows(RuntimeException.class, () -> service.register(reg()));
         verify(userRepository).findByEmail("c@test.com");
-    }
-
-    @Test
-    void login_success() {
-        LoginRequest l = new LoginRequest(); l.setEmail("c@test.com"); l.setPassword("pass123");
-        User user = User.builder().id(10L).email("c@test.com").passwordHash("enc").role(Role.CLIENT).name("Client").active(true).build();
-        Client client = Client.builder().id(7L).telephone("0600").address("addr").user(user).build();
-        when(userRepository.findByEmail("c@test.com")).thenReturn(Optional.of(user));
-        when(passwordEncoder.matches("pass123","enc")).thenReturn(true);
-        when(clientRepository.findByUser(user)).thenReturn(Optional.of(client));
-        ClientResponse resp = ClientResponse.builder().id(7L).email("c@test.com").name("Client").role("CLIENT").build();
-        when(clientMapper.toResponse(client)).thenReturn(resp);
-//        ClientResponse out = service.login(l);
-//        assertEquals(7L,out.getId());
-        verify(userRepository).findByEmail("c@test.com");
-        verify(clientRepository).findByUser(user);
-    }
-
-    @Test
-    void login_emailNotFound() {
-        LoginRequest l = new LoginRequest(); l.setEmail("x@test.com"); l.setPassword("p");
-        when(userRepository.findByEmail("x@test.com")).thenReturn(Optional.empty());
-        assertThrows(RuntimeException.class, () -> service.login(l));
-    }
-
-    @Test
-    void login_invalidPassword() {
-        LoginRequest l = new LoginRequest(); l.setEmail("c@test.com"); l.setPassword("bad");
-        User user = User.builder().id(10L).email("c@test.com").passwordHash("enc").role(Role.CLIENT).name("Client").active(true).build();
-        when(userRepository.findByEmail("c@test.com")).thenReturn(Optional.of(user));
-        when(passwordEncoder.matches("bad","enc")).thenReturn(false);
-        assertThrows(RuntimeException.class, () -> service.login(l));
-    }
-
-    @Test
-    void login_clientProfileMissing() {
-        LoginRequest l = new LoginRequest(); l.setEmail("c@test.com"); l.setPassword("pass123");
-        User user = User.builder().id(10L).email("c@test.com").passwordHash("enc").role(Role.CLIENT).name("Client").active(true).build();
-        when(userRepository.findByEmail("c@test.com")).thenReturn(Optional.of(user));
-        when(passwordEncoder.matches("pass123","enc")).thenReturn(true);
-        when(clientRepository.findByUser(user)).thenReturn(Optional.empty());
-        assertThrows(RuntimeException.class, () -> service.login(l));
     }
 }
 

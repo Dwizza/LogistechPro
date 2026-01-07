@@ -1,7 +1,7 @@
 package com.logistechpro.mapper;
 
-import com.logistechpro.dto.Request.ClientRegisterRequest;
-import com.logistechpro.dto.Response.ClientResponse;
+import com.logistechpro.dto.request.ClientRegisterRequest;
+import com.logistechpro.dto.response.ClientResponse;
 import com.logistechpro.models.Client;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

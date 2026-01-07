@@ -1,8 +1,8 @@
 package com.logistechpro.service.Implement;
 
 import com.logistechpro.models.Product;
-import com.logistechpro.dto.Request.ProductRequest;
-import com.logistechpro.dto.Response.ProductResponse;
+import com.logistechpro.dto.request.ProductRequest;
+import com.logistechpro.dto.response.ProductResponse;
 import com.logistechpro.mapper.ProductMapper;
 import com.logistechpro.repository.InventoryRepository;
 import com.logistechpro.repository.ProductRepository;

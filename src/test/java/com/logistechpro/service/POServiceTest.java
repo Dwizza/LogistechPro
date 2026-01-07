@@ -1,9 +1,9 @@
 package com.logistechpro.service;
 
-import com.logistechpro.dto.Request.POLineRequest;
-import com.logistechpro.dto.Request.PORequest;
-import com.logistechpro.dto.Response.POLineResponse;
-import com.logistechpro.dto.Response.POResponse;
+import com.logistechpro.dto.request.POLineRequest;
+import com.logistechpro.dto.request.PORequest;
+import com.logistechpro.dto.response.POLineResponse;
+import com.logistechpro.dto.response.POResponse;
 import com.logistechpro.mapper.POMapper;
 import com.logistechpro.models.*;
 import com.logistechpro.models.Enums.PurchaseOrderStatus;

@@ -22,10 +22,10 @@ public class JwtService {
     @Value("${app.jwt.secret:${SECRET_KEY:}}")
     private String secret;
 
-    @Value("${app.jwt.access-expiration-ms:900000}") // 15min
+    @Value("${app.jwt.access-expiration-ms:900000}")
     private long accessTokenExpirationMs;
 
-    @Value("${app.jwt.refresh-expiration-ms:604800000}") // 7 days
+    @Value("${app.jwt.refresh-expiration-ms:604800000}")
     private long refreshTokenExpirationMs;
 
 
@@ -47,7 +47,7 @@ public class JwtService {
                 .toList();
 
         return Jwts.builder()
-                .setSubject(userDetails.getUsername()) // email
+                .setSubject(userDetails.getUsername())
                 .claim("roles", roles)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationMs))

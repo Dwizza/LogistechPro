@@ -1,7 +1,7 @@
 package com.logistechpro.service;
 
-import com.logistechpro.dto.Request.ProductRequest;
-import com.logistechpro.dto.Response.ProductResponse;
+import com.logistechpro.dto.request.ProductRequest;
+import com.logistechpro.dto.response.ProductResponse;
 import java.util.List;
 
 public interface ProductService {

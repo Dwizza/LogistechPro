@@ -1,7 +1,7 @@
 package com.logistechpro.service;
 
-import com.logistechpro.dto.Request.InventoryRequest;
-import com.logistechpro.dto.Response.InventoryResponse;
+import com.logistechpro.dto.request.InventoryRequest;
+import com.logistechpro.dto.response.InventoryResponse;
 
 import java.util.List;
 

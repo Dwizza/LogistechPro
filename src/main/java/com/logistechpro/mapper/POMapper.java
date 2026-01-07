@@ -1,7 +1,7 @@
 package com.logistechpro.mapper;
 
-import com.logistechpro.dto.Response.POLineResponse;
-import com.logistechpro.dto.Response.POResponse;
+import com.logistechpro.dto.response.POLineResponse;
+import com.logistechpro.dto.response.POResponse;
 import com.logistechpro.models.PurchaseOrder;
 import com.logistechpro.models.PurchaseOrderLine;
 import org.mapstruct.Mapper;
