@@ -17,6 +17,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -122,5 +123,19 @@ class AdminUserServiceTest {
         RuntimeException ex = assertThrows(RuntimeException.class, () -> service.getCurrentAdmin());
         assertTrue(ex.getMessage().contains("Accès refusé"));
     }
-}
 
+    @Test
+    void getAllWarehouseManagers_success() {
+        User m1 = User.builder().id(1L).name("M1").email("m1@test.com").role(Role.WAREHOUSE_MANAGER).passwordHash("X").active(true).build();
+        User m2 = User.builder().id(2L).name("M2").email("m2@test.com").role(Role.WAREHOUSE_MANAGER).passwordHash("Y").active(false).build();
+        when(userRepository.findAllByRole(Role.WAREHOUSE_MANAGER)).thenReturn(List.of(m1, m2));
+
+        List<UserResponse> resp = service.getAllWarehouseManagers();
+
+        assertEquals(2, resp.size());
+        assertEquals("m1@test.com", resp.get(0).getEmail());
+        assertEquals(Role.WAREHOUSE_MANAGER, resp.get(0).getRole());
+        assertFalse(resp.get(1).isActive());
+        verify(userRepository).findAllByRole(Role.WAREHOUSE_MANAGER);
+    }
+}

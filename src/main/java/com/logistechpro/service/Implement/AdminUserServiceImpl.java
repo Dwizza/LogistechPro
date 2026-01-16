@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.Authentication;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class AdminUserServiceImpl implements AdminUserService {
@@ -60,5 +62,19 @@ public class AdminUserServiceImpl implements AdminUserService {
                 .role(user.getRole())
                 .active(user.isActive())
                 .build();
+    }
+
+    @Override
+    public List<UserResponse> getAllWarehouseManagers() {
+        return userRepository.findAllByRole(Role.WAREHOUSE_MANAGER)
+                .stream()
+                .map(u -> UserResponse.builder()
+                        .id(u.getId())
+                        .name(u.getName())
+                        .email(u.getEmail())
+                        .role(u.getRole())
+                        .active(u.isActive())
+                        .build())
+                .toList();
     }
 }

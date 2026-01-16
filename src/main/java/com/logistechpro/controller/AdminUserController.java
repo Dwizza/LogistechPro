@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/admin/users")
 @RequiredArgsConstructor
@@ -22,6 +24,12 @@ public class AdminUserController {
     public ResponseEntity<UserResponse> createWarehouseManager(@Valid @RequestBody WarehouseManagerCreateRequest request) {
         UserResponse response = adminUserService.createWarehouseManager(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping("/warehouse-managers")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<UserResponse>> getAllWarehouseManagers() {
+        return ResponseEntity.ok(adminUserService.getAllWarehouseManagers());
     }
 
     @GetMapping("/me")
