@@ -1,6 +1,7 @@
 package com.logistechpro.controller;
 
 import com.logistechpro.dto.request.WarehouseManagerCreateRequest;
+import com.logistechpro.dto.request.WarehouseManagerUpdateRequest;
 import com.logistechpro.dto.response.UserResponse;
 import com.logistechpro.service.AdminUserService;
 import jakarta.validation.Valid;
@@ -30,6 +31,20 @@ public class AdminUserController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserResponse>> getAllWarehouseManagers() {
         return ResponseEntity.ok(adminUserService.getAllWarehouseManagers());
+    }
+
+    @PutMapping("/warehouse-managers/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<UserResponse> updateWarehouseManager(@PathVariable Long id,
+                                                              @Valid @RequestBody WarehouseManagerUpdateRequest request) {
+        return ResponseEntity.ok(adminUserService.updateWarehouseManager(id, request));
+    }
+
+    @DeleteMapping("/warehouse-managers/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteWarehouseManager(@PathVariable Long id) {
+        adminUserService.deleteWarehouseManager(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/me")

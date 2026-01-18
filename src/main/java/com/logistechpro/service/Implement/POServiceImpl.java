@@ -28,6 +28,20 @@ public class POServiceImpl implements POService{
     private final InventoryMovmentRepository movmentRepo;
 
     @Override
+    public List<POResponse> getAll() {
+        return poRepo.findAll().stream()
+                .map(mapper::toResponse)
+                .toList();
+    }
+
+    @Override
+    public POResponse getById(Long id) {
+        PurchaseOrder po = poRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Purchase Order not found"));
+        return mapper.toResponse(po);
+    }
+
+    @Override
     public POResponse create(PORequest request) {
         Supplier supplier = supplierRepo.findById(request.getSupplierId())
                 .orElseThrow(() -> new RuntimeException("Supplier not found"));
@@ -61,6 +75,7 @@ public class POServiceImpl implements POService{
         return mapper.toResponse(saved);
     }
 
+    @Override
     public POResponse approvePurchaseOrder(Long poId){
         PurchaseOrder po = poRepo.findById(poId)
                 .orElseThrow(() -> new RuntimeException("Purchase Order not found"));
@@ -73,6 +88,7 @@ public class POServiceImpl implements POService{
         return mapper.toResponse(saved);
     }
 
+    @Override
     @Transactional
     public POResponse receivePurchaseOrder(Long poId) {
         PurchaseOrder po = poRepo.findById(poId)
@@ -118,6 +134,7 @@ public class POServiceImpl implements POService{
         return mapper.toResponse(saved);
     }
 
+    @Override
     public POResponse cancelPurchaseOrder(Long id){
         PurchaseOrder po = poRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Purchase Order not found"));

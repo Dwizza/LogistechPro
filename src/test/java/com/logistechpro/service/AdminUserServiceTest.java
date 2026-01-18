@@ -1,6 +1,7 @@
 package com.logistechpro.service;
 
 import com.logistechpro.dto.request.WarehouseManagerCreateRequest;
+import com.logistechpro.dto.request.WarehouseManagerUpdateRequest;
 import com.logistechpro.dto.response.UserResponse;
 import com.logistechpro.models.Enums.Role;
 import com.logistechpro.models.User;
@@ -42,6 +43,152 @@ class AdminUserServiceTest {
         request.setEmail("manager@test.com");
         request.setPassword("secret123");
         SecurityContextHolder.clearContext();
+    }
+
+    @Test
+    void updateWarehouseManager_success() {
+        WarehouseManagerUpdateRequest update = new WarehouseManagerUpdateRequest();
+        update.setName("New Name");
+        update.setEmail("new@test.com");
+        update.setPassword("newpass123");
+        update.setActive(false);
+
+        User existing = User.builder()
+                .id(10L)
+                .name("Old")
+                .email("old@test.com")
+                .passwordHash("OLDHASH")
+                .role(Role.WAREHOUSE_MANAGER)
+                .active(true)
+                .build();
+
+        when(userRepository.findById(10L)).thenReturn(Optional.of(existing));
+        when(userRepository.findByEmail("new@test.com")).thenReturn(Optional.empty());
+        when(passwordEncoder.encode("newpass123")).thenReturn("NEWHASH");
+        when(userRepository.save(any(User.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        UserResponse resp = service.updateWarehouseManager(10L, update);
+
+        assertEquals(10L, resp.getId());
+        assertEquals("New Name", resp.getName());
+        assertEquals("new@test.com", resp.getEmail());
+        assertFalse(resp.isActive());
+        verify(userRepository).findById(10L);
+        verify(userRepository).findByEmail("new@test.com");
+        verify(passwordEncoder).encode("newpass123");
+        verify(userRepository).save(any(User.class));
+    }
+
+    @Test
+    void updateWarehouseManager_userNotFound() {
+        WarehouseManagerUpdateRequest update = new WarehouseManagerUpdateRequest();
+        update.setName("X");
+
+        when(userRepository.findById(404L)).thenReturn(Optional.empty());
+
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> service.updateWarehouseManager(404L, update));
+        assertTrue(ex.getMessage().contains("Utilisateur introuvable"));
+        verify(userRepository).findById(404L);
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    void updateWarehouseManager_roleMismatch() {
+        WarehouseManagerUpdateRequest update = new WarehouseManagerUpdateRequest();
+        update.setName("X");
+
+        User notManager = User.builder()
+                .id(2L)
+                .name("Client")
+                .email("client@test.com")
+                .passwordHash("H")
+                .role(Role.CLIENT)
+                .active(true)
+                .build();
+
+        when(userRepository.findById(2L)).thenReturn(Optional.of(notManager));
+
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> service.updateWarehouseManager(2L, update));
+        assertTrue(ex.getMessage().toLowerCase().contains("warehouse manager"));
+        verify(userRepository).findById(2L);
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    void updateWarehouseManager_emailExistsForAnotherUser() {
+        WarehouseManagerUpdateRequest update = new WarehouseManagerUpdateRequest();
+        update.setEmail("taken@test.com");
+
+        User existing = User.builder()
+                .id(10L)
+                .name("Old")
+                .email("old@test.com")
+                .passwordHash("OLDHASH")
+                .role(Role.WAREHOUSE_MANAGER)
+                .active(true)
+                .build();
+        User other = User.builder()
+                .id(11L)
+                .name("Other")
+                .email("taken@test.com")
+                .passwordHash("HASH")
+                .role(Role.WAREHOUSE_MANAGER)
+                .active(true)
+                .build();
+
+        when(userRepository.findById(10L)).thenReturn(Optional.of(existing));
+        when(userRepository.findByEmail("taken@test.com")).thenReturn(Optional.of(other));
+
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> service.updateWarehouseManager(10L, update));
+        assertTrue(ex.getMessage().contains("Email already exists"));
+        verify(userRepository).findByEmail("taken@test.com");
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    void deleteWarehouseManager_success() {
+        User existing = User.builder()
+                .id(7L)
+                .name("M")
+                .email("m@test.com")
+                .passwordHash("H")
+                .role(Role.WAREHOUSE_MANAGER)
+                .active(true)
+                .build();
+
+        when(userRepository.findById(7L)).thenReturn(Optional.of(existing));
+
+        service.deleteWarehouseManager(7L);
+
+        verify(userRepository).findById(7L);
+        verify(userRepository).delete(existing);
+    }
+
+    @Test
+    void deleteWarehouseManager_roleMismatch() {
+        User notManager = User.builder()
+                .id(8L)
+                .name("Client")
+                .email("c@test.com")
+                .passwordHash("H")
+                .role(Role.CLIENT)
+                .active(true)
+                .build();
+
+        when(userRepository.findById(8L)).thenReturn(Optional.of(notManager));
+
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> service.deleteWarehouseManager(8L));
+        assertTrue(ex.getMessage().toLowerCase().contains("warehouse manager"));
+        verify(userRepository, never()).delete(any());
+    }
+
+    @Test
+    void deleteWarehouseManager_notFound() {
+        when(userRepository.findById(99L)).thenReturn(Optional.empty());
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> service.deleteWarehouseManager(99L));
+        assertTrue(ex.getMessage().contains("Utilisateur introuvable"));
+        verify(userRepository).findById(99L);
+        verify(userRepository, never()).delete(any());
     }
 
     @Test

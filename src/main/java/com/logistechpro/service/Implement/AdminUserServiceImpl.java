@@ -1,6 +1,7 @@
 package com.logistechpro.service.Implement;
 
 import com.logistechpro.dto.request.WarehouseManagerCreateRequest;
+import com.logistechpro.dto.request.WarehouseManagerUpdateRequest;
 import com.logistechpro.dto.response.UserResponse;
 import com.logistechpro.models.Enums.Role;
 import com.logistechpro.models.User;
@@ -41,6 +42,58 @@ public class AdminUserServiceImpl implements AdminUserService {
                 .role(saved.getRole())
                 .active(saved.isActive())
                 .build();
+    }
+
+    @Override
+    public UserResponse updateWarehouseManager(Long id, WarehouseManagerUpdateRequest request) {
+        User existing = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+
+        if (existing.getRole() != Role.WAREHOUSE_MANAGER) {
+            throw new RuntimeException("Ce user n'est pas un warehouse manager");
+        }
+
+        if (request.getEmail() != null && !request.getEmail().equalsIgnoreCase(existing.getEmail())) {
+            userRepository.findByEmail(request.getEmail())
+                    .filter(u -> !u.getId().equals(existing.getId()))
+                    .ifPresent(u -> {
+                        throw new RuntimeException("Email already exists!");
+                    });
+            existing.setEmail(request.getEmail());
+        }
+
+        if (request.getName() != null) {
+            existing.setName(request.getName());
+        }
+
+        if (request.getPassword() != null && !request.getPassword().isBlank()) {
+            existing.setPasswordHash(passwordEncoder.encode(request.getPassword()));
+        }
+
+        if (request.getActive() != null) {
+            existing.setActive(request.getActive());
+        }
+
+        User saved = userRepository.save(existing);
+        return UserResponse.builder()
+                .id(saved.getId())
+                .name(saved.getName())
+                .email(saved.getEmail())
+                .role(saved.getRole())
+                .active(saved.isActive())
+                .build();
+    }
+
+    @Override
+    public void deleteWarehouseManager(Long id) {
+        User existing = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+
+        if (existing.getRole() != Role.WAREHOUSE_MANAGER) {
+            throw new RuntimeException("Ce user n'est pas un warehouse manager");
+        }
+
+        userRepository.delete(existing);
     }
 
     @Override

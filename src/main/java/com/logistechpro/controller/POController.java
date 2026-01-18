@@ -8,12 +8,24 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/purchase-orders")
 public class POController {
 
     private final POService poService;
+
+    @GetMapping
+    public ResponseEntity<List<POResponse>> getAll() {
+        return ResponseEntity.ok(poService.getAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<POResponse> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(poService.getById(id));
+    }
 
     @PostMapping
     public ResponseEntity<POResponse> create(@Valid @RequestBody PORequest request) {

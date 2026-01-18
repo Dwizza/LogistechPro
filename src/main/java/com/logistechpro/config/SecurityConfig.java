@@ -4,6 +4,7 @@ import com.logistechpro.repository.UserRepository;
 import com.logistechpro.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -71,10 +72,12 @@ public class SecurityConfig {
                         .requestMatchers("/actuator/**").permitAll()
 
                         .requestMatchers("/api/admin/**").hasRole(ADMIN)
-                        .requestMatchers("/api/products/**").hasRole(ADMIN)
-                        .requestMatchers("/api/suppliers/**").hasRole(ADMIN)
-                        .requestMatchers("/api/warehouses/**").hasRole(ADMIN)
+                        .requestMatchers("/api/products").hasRole(ADMIN)
+//                        .requestMatchers("/api/warehouses/**").hasRole(ADMIN)
 
+                        .requestMatchers("/api/suppliers/**").hasAnyRole(ADMIN, WAREHOUSE_MANAGER)
+                        .requestMatchers(HttpMethod.GET, "/api/products/details").hasAnyRole(ADMIN, WAREHOUSE_MANAGER)
+                        .requestMatchers("/api/warehouses/**").hasAnyRole(ADMIN, WAREHOUSE_MANAGER)
                         .requestMatchers("/api/purchase-orders/**").hasAnyRole(ADMIN, WAREHOUSE_MANAGER)
                         .requestMatchers("/api/inventories/**").hasAnyRole(ADMIN, WAREHOUSE_MANAGER)
                         .requestMatchers("/api/reservations/**").hasAnyRole(ADMIN, WAREHOUSE_MANAGER)

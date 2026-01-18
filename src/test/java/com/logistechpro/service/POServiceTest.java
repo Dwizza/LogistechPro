@@ -18,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -135,6 +136,42 @@ class POServiceTest {
         assertEquals("Supplier not found", exception.getMessage());
     }
 
+    @Test
+    @DisplayName("Test getAll Purchase Orders - Success")
+    void testGetAllPOSuccess() {
+        when(poRepo.findAll()).thenReturn(List.of(purchaseOrder));
+        when(poMapper.toResponse(any(PurchaseOrder.class))).thenReturn(poResponse);
 
+        List<POResponse> res = poService.getAll();
+
+        assertNotNull(res);
+        assertEquals(1, res.size());
+        verify(poRepo, times(1)).findAll();
+        verify(poMapper, times(1)).toResponse(any(PurchaseOrder.class));
+    }
+
+    @Test
+    @DisplayName("Test getById Purchase Order - Success")
+    void testGetByIdPOSuccess() {
+        when(poRepo.findById(1L)).thenReturn(Optional.of(purchaseOrder));
+        when(poMapper.toResponse(any(PurchaseOrder.class))).thenReturn(poResponse);
+
+        POResponse res = poService.getById(1L);
+
+        assertNotNull(res);
+        verify(poRepo, times(1)).findById(1L);
+        verify(poMapper, times(1)).toResponse(any(PurchaseOrder.class));
+    }
+
+    @Test
+    @DisplayName("Test getById Purchase Order - Not Found")
+    void testGetByIdPONotFound() {
+        when(poRepo.findById(404L)).thenReturn(Optional.empty());
+
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> poService.getById(404L));
+        assertTrue(ex.getMessage().contains("Purchase Order not found"));
+        verify(poRepo, times(1)).findById(404L);
+        verify(poMapper, never()).toResponse(any());
+    }
 
 }

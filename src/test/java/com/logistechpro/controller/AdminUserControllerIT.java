@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.logistechpro.AbstractIntegrationTest;
 import com.logistechpro.dto.request.LoginRequest;
+import com.logistechpro.dto.request.WarehouseManagerUpdateRequest;
 import com.logistechpro.models.Enums.Role;
 import com.logistechpro.models.User;
 import com.logistechpro.repository.UserRepository;
@@ -14,8 +15,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc
@@ -32,6 +33,8 @@ class AdminUserControllerIT extends AbstractIntegrationTest {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    private Long manager1Id;
 
     @BeforeEach
     void setup() {
@@ -50,7 +53,7 @@ class AdminUserControllerIT extends AbstractIntegrationTest {
         manager1.setName("Manager 1");
         manager1.setRole(Role.WAREHOUSE_MANAGER);
         manager1.setActive(true);
-        userRepository.save(manager1);
+        manager1Id = userRepository.save(manager1).getId();
 
         User manager2 = new User();
         manager2.setEmail("manager2@test.com");
@@ -96,5 +99,37 @@ class AdminUserControllerIT extends AbstractIntegrationTest {
                 .andExpect(jsonPath("$[0].role").value("WAREHOUSE_MANAGER"))
                 .andExpect(jsonPath("$[1].role").value("WAREHOUSE_MANAGER"))
                 .andExpect(jsonPath("$.length()").value(2));
+    }
+
+    @Test
+    void updateWarehouseManager_shouldUpdateFields() throws Exception {
+        String token = loginAsAdminAndGetAccessToken();
+
+        WarehouseManagerUpdateRequest update = new WarehouseManagerUpdateRequest();
+        update.setName("Manager 1 Updated");
+        update.setActive(false);
+
+        mockMvc.perform(put("/api/admin/users/warehouse-managers/{id}", manager1Id)
+                        .header("Authorization", "Bearer " + token)
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(update)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith("application/json"))
+                .andExpect(jsonPath("$.id").value(manager1Id))
+                .andExpect(jsonPath("$.name").value("Manager 1 Updated"))
+                .andExpect(jsonPath("$.active").value(false))
+                .andExpect(jsonPath("$.role").value("WAREHOUSE_MANAGER"));
+    }
+
+    @Test
+    void deleteWarehouseManager_shouldReturnNoContent() throws Exception {
+        String token = loginAsAdminAndGetAccessToken();
+
+        mockMvc.perform(delete("/api/admin/users/warehouse-managers/{id}", manager1Id)
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isNoContent());
+
+        // verify it's deleted
+        assertFalse(userRepository.findById(manager1Id).isPresent());
     }
 }

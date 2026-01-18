@@ -8,4 +8,5 @@ import com.logistechpro.dto.response.ClientResponse;
 public interface AuthService {
     ClientResponse register(ClientRegisterRequest request);
     AuthResponse login(LoginRequest request);
+    AuthResponse refreshToken(String refreshToken);
 }

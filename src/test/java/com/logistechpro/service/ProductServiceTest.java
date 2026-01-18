@@ -2,11 +2,13 @@ package com.logistechpro.service;
 
 import com.logistechpro.dto.request.ProductRequest;
 import com.logistechpro.dto.response.ProductResponse;
+import com.logistechpro.dto.response.ProductWithInventoryResponse;
 import com.logistechpro.mapper.ProductMapper;
+import com.logistechpro.models.Inventory;
 import com.logistechpro.models.Product;
+import com.logistechpro.models.Warehouse;
 import com.logistechpro.repository.InventoryRepository;
 import com.logistechpro.repository.ProductRepository;
-import com.logistechpro.repository.WarehouseRepository;
 import com.logistechpro.service.Implement.ProductServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,9 +37,6 @@ class ProductServiceTest {
     InventoryRepository inventoryRepository;
 
     @Mock
-    WarehouseRepository warehouseRepository;
-
-    @Mock
     ProductMapper mapper;
 
     @InjectMocks
@@ -63,7 +62,6 @@ class ProductServiceTest {
         testRequest.setName("Test Product");
         testRequest.setCategory("Electronics");
         testRequest.setAvgPrice(new BigDecimal("99.99"));
-        testRequest.setWarehouseId(1L);
         testRequest.setActive(true);
 
         testResponse = new ProductResponse();
@@ -105,7 +103,6 @@ class ProductServiceTest {
         List<ProductResponse> res = productService.getAll();
 
         assertTrue(res.isEmpty());
-        assertEquals(0, res.size());
         verify(productRepository).findAll();
     }
 
@@ -234,7 +231,6 @@ class ProductServiceTest {
         req.setName("New Product");
         req.setCategory("NewCat");
         req.setAvgPrice(new BigDecimal("45.50"));
-        req.setWarehouseId(2L);
         req.setActive(true);
 
         Product newProduct = Product.builder().id(5L).sku("NEW-SKU").name("New Product").category("NewCat").avgPrice(new BigDecimal("45.50")).active(true).build();
@@ -259,7 +255,6 @@ class ProductServiceTest {
         updateReq.setName("Updated Product");
         updateReq.setCategory("UpdatedCat");
         updateReq.setAvgPrice(new BigDecimal("120.00"));
-        updateReq.setWarehouseId(3L);
         updateReq.setActive(true);
 
         Product existingProduct = Product.builder().id(1L).sku("OLD-SKU").name("Old Product").category("OldCat").avgPrice(new BigDecimal("50.00")).active(false).build();
@@ -269,7 +264,7 @@ class ProductServiceTest {
         when(productRepository.save(existingProduct)).thenReturn(existingProduct);
         when(mapper.toResponse(existingProduct)).thenReturn(testResponse);
 
-        ProductResponse res = productService.update(1L, updateReq);
+        productService.update(1L, updateReq);
 
         verify(productRepository).findById(1L);
         verify(mapper).updateEntityFromDto(updateReq, existingProduct);
@@ -294,7 +289,6 @@ class ProductServiceTest {
         req.setName("Updated");
         req.setCategory("UpdCat");
         req.setAvgPrice(new BigDecimal("85.00"));
-        req.setWarehouseId(2L);
         req.setActive(true);
 
         Product existing = Product.builder().id(2L).sku("OLD").name("OldName").category("OldCat").avgPrice(new BigDecimal("60.00")).active(false).build();
@@ -360,6 +354,57 @@ class ProductServiceTest {
         inOrder.verify(productRepository).findBySku("NEW-SKU");
         inOrder.verify(mapper).toEntity(testRequest);
         inOrder.verify(productRepository).save(testProduct);
+    }
+
+    @Test
+    void getAllWithInventory_shouldReturnProductsWithWarehousesAndQuantities() {
+        Product p1 = Product.builder().id(1L).sku("SKU1").name("A").category("C1").avgPrice(new BigDecimal("10.50")).active(true).build();
+        Product p2 = Product.builder().id(2L).sku("SKU2").name("B").category("C2").avgPrice(new BigDecimal("20.00")).active(false).build();
+
+        Warehouse w1 = Warehouse.builder().id(100L).code("W-100").name("WH 100").active(true).build();
+        Warehouse w2 = Warehouse.builder().id(200L).code("W-200").name("WH 200").active(true).build();
+
+        Inventory inv11 = Inventory.builder().id(1L).product(p1).warehouse(w1).qtyOnHand(10).qtyReserved(2).build();
+        Inventory inv12 = Inventory.builder().id(2L).product(p1).warehouse(w2).qtyOnHand(0).qtyReserved(0).build();
+        Inventory inv21 = Inventory.builder().id(3L).product(p2).warehouse(w1).qtyOnHand(5).qtyReserved(1).build();
+
+        when(productRepository.findAll()).thenReturn(List.of(p1, p2));
+        when(inventoryRepository.findAllByProduct(p1)).thenReturn(List.of(inv11, inv12));
+        when(inventoryRepository.findAllByProduct(p2)).thenReturn(List.of(inv21));
+
+        List<ProductWithInventoryResponse> res = productService.getAllWithInventory();
+
+        assertEquals(2, res.size());
+
+        ProductWithInventoryResponse r1 = res.get(0);
+        assertEquals("SKU1", r1.getSku());
+        assertEquals(2, r1.getWarehouses().size());
+        assertEquals(8, r1.getWarehouses().get(0).getQtyAvailable());
+        assertEquals(new BigDecimal("10.50"), r1.getWarehouses().get(0).getPrice());
+
+        ProductWithInventoryResponse r2 = res.get(1);
+        assertEquals("SKU2", r2.getSku());
+        assertEquals(1, r2.getWarehouses().size());
+        assertEquals(4, r2.getWarehouses().get(0).getQtyAvailable());
+        assertEquals(new BigDecimal("20.00"), r2.getWarehouses().get(0).getPrice());
+
+        verify(productRepository).findAll();
+        verify(inventoryRepository).findAllByProduct(p1);
+        verify(inventoryRepository).findAllByProduct(p2);
+    }
+
+    @Test
+    void getByIdWithInventory_whenNoInventory_shouldReturnEmptyWarehousesList() {
+        when(productRepository.findById(1L)).thenReturn(Optional.of(testProduct));
+        when(inventoryRepository.findAllByProduct(testProduct)).thenReturn(Collections.emptyList());
+
+        ProductWithInventoryResponse res = productService.getByIdWithInventory(1L);
+
+        assertEquals(1L, res.getId());
+        assertNotNull(res.getWarehouses());
+        assertTrue(res.getWarehouses().isEmpty());
+        verify(productRepository).findById(1L);
+        verify(inventoryRepository).findAllByProduct(testProduct);
     }
 
     private ProductResponse createProductResponse(Long id, String sku, String name, String category, BigDecimal avgPrice, boolean active) {

@@ -2,6 +2,7 @@ package com.logistechpro.controller;
 
 import com.logistechpro.dto.request.ClientRegisterRequest;
 import com.logistechpro.dto.request.LoginRequest;
+import com.logistechpro.dto.request.TokenRefreshRequest;
 import com.logistechpro.dto.response.AuthResponse;
 import com.logistechpro.dto.response.ClientResponse;
 import com.logistechpro.service.AuthService;
@@ -30,6 +31,11 @@ public class AuthController {
         ClientResponse response = authService.register(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping("/refresh")
+    public AuthResponse refresh(@Valid @RequestBody TokenRefreshRequest request) {
+        return authService.refreshToken(request.getRefreshToken());
     }
 
 

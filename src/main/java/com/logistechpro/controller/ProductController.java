@@ -2,6 +2,7 @@ package com.logistechpro.controller;
 
 import com.logistechpro.dto.request.ProductRequest;
 import com.logistechpro.dto.response.ProductResponse;
+import com.logistechpro.dto.response.ProductWithInventoryResponse;
 import com.logistechpro.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -22,13 +23,29 @@ public class ProductController {
         return ResponseEntity.ok(productService.getAll());
     }
 
+    /**
+     * Détails produit + warehouses + quantités (inventaire).
+     */
+    @GetMapping("/details")
+    public ResponseEntity<List<ProductWithInventoryResponse>> getAllWithInventory() {
+        return ResponseEntity.ok(productService.getAllWithInventory());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> getById(@PathVariable Long id) {
         return ResponseEntity.ok(productService.getById(id));
     }
 
+    /**
+     * Détails d'un produit (par id) + warehouses + quantités (inventaire).
+     */
+    @GetMapping("/{id}/details")
+    public ResponseEntity<ProductWithInventoryResponse> getByIdWithInventory(@PathVariable Long id) {
+        return ResponseEntity.ok(productService.getByIdWithInventory(id));
+    }
+
     @GetMapping("/sku/{sku}")
-    public ResponseEntity<ProductResponse> getBySku(@PathVariable String sku){
+    public ResponseEntity<ProductResponse> getBySku(@PathVariable String sku) {
         return ResponseEntity.ok(productService.getBySku(sku));
     }
 
